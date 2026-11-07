@@ -14,14 +14,14 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: '8.7' }
       - run: gradle assembleDebug
-      - run: cp app/build/outputs/apk/debug/app-debug.apk MeuTreino.apk
+      - run: cp app/build/outputs/apk/debug/app-debug.apk MeuTreino-v$GITHUB_RUN_NUMBER.apk
       - uses: actions/upload-artifact@v4
         with:
           name: MeuTreino-apk
-          path: MeuTreino.apk
+          path: MeuTreino-v*.apk
       - name: Publicar APK para download direto
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release delete ultima -y --cleanup-tag || true
-          gh release create ultima MeuTreino.apk --title "Meu Treino (última versão)" --notes "Baixe o MeuTreino.apk abaixo e instale no celular."
+          gh release create ultima MeuTreino-v*.apk --title "Meu Treino (última versão)" --notes "Baixe o arquivo MeuTreino-v….apk abaixo e instale no celular."
