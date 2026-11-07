@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Meu Treino</title>
+<style>
+:root{
+  --azul:#1E4FA3; --azul2:#3B7BE0; --fundo:#F3F6FB; --card:#FFFFFF; --texto:#1B2333; --sub:#5B6678;
+  --linha:#E3E8F1; --verde:#1F9D62; --verdeClaro:#E3F5EC; --laranja:#E58A17;
+  --A:#3B7BE0; --B:#1F9D62; --C:#8A5CF6; --D:#E58A17;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:system-ui,-apple-system,Roboto,sans-serif;background:var(--fundo);color:var(--texto);font-size:16px}
+header{background:var(--azul);color:#fff;padding:18px 16px 14px}
+header h1{margin:0;font-size:22px}
+header p{margin:4px 0 0;opacity:.85;font-size:14px}
+main{padding:14px 14px 90px}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--linha);display:flex}
+nav button{flex:1;border:0;background:none;padding:10px 0 12px;font-size:13px;color:var(--sub);font-weight:600}
+nav button span{display:block;font-size:20px;margin-bottom:2px}
+nav button.ativo{color:var(--azul)}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(20,40,80,.08)}
+h2{font-size:17px;margin:4px 0 10px}
+.semana-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.semana-top button{border:0;background:var(--fundo);border-radius:10px;width:40px;height:40px;font-size:20px;color:var(--azul)}
+.semana-top b{font-size:15px}
+.dias{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.dia{border-radius:12px;padding:8px 0;text-align:center;background:var(--fundo);border:2px solid transparent;font-size:12px;color:var(--sub)}
+.dia .n{font-size:16px;font-weight:700;color:var(--texto);margin:2px 0}
+.dia .t{font-weight:800;font-size:13px}
+.dia.hoje{border-color:var(--azul2)}
+.dia.feito{background:var(--verde);color:#fff}
+.dia.feito .n,.dia.feito .t{color:#fff}
+.dia.extra{background:var(--verdeClaro)}
+.progresso{height:10px;background:var(--linha);border-radius:6px;overflow:hidden;margin:12px 0 6px}
+.progresso div{height:100%;background:var(--verde);border-radius:6px;transition:width .3s}
+.legenda{font-size:13px;color:var(--sub)}
+.treinoHoje{display:flex;align-items:center;gap:12px}
+.letra{width:52px;height:52px;border-radius:14px;color:#fff;font-weight:800;font-size:24px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.btn{display:block;width:100%;border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:700;background:var(--azul);color:#fff;margin-top:12px}
+.btn.verde{background:var(--verde)}
+.btn.claro{background:var(--fundo);color:var(--azul)}
+.lista-treinos .item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--linha)}
+.lista-treinos .item:last-child{border:0}
+.lista-treinos .item div:nth-child(2){flex:1}
+.lista-treinos small{color:var(--sub)}
+.ex{background:var(--card);border-radius:14px;margin-bottom:10px;box-shadow:0 1px 3px rgba(20,40,80,.08);overflow:hidden}
+.ex.ok{outline:2px solid var(--verde)}
+.ex-top{display:flex;gap:12px;padding:12px;align-items:center}
+.num{width:32px;height:32px;border-radius:50%;background:var(--fundo);display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0}
+.ex.ok .num{background:var(--verde);color:#fff}
+.ex-top .info{flex:1}
+.ex-top .nome{font-weight:700}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:20px;background:var(--fundo);color:var(--sub);margin-top:4px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:0 12px 10px}
+.chip{background:#EAF1FD;color:var(--azul);font-weight:700;font-size:13px;padding:6px 10px;border-radius:10px}
+.chip.lar{background:#FDF1E2;color:#B5650B}
+.det{display:none;padding:0 12px 12px;font-size:14px;color:var(--sub);line-height:1.45}
+.ex.aberto .det{display:block}
+.aviso{background:#FFF6E6;color:#8A5300;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:13px}
+.dica{background:#EAF1FD;color:var(--azul);border-radius:10px;padding:8px 10px;margin:8px 0;font-size:13px}
+.acoes{display:flex;gap:8px;padding:0 12px 12px}
+.acoes button,.acoes a{flex:1;border:0;border-radius:10px;padding:11px 6px;font-size:14px;font-weight:700;text-align:center;text-decoration:none}
+.vid{background:#FDE8E8;color:#C62828}
+.mais{background:var(--fundo);color:var(--azul)}
+.feito-btn{background:var(--fundo);color:var(--verde)}
+.ex.ok .feito-btn{background:var(--verde);color:#fff}
+.carga{display:flex;align-items:center;gap:8px;margin-top:8px}
+.carga input{flex:1;border:1px solid var(--linha);border-radius:10px;padding:10px;font-size:15px}
+.voltarBtn{border:0;background:rgba(255,255,255,.18);color:#fff;border-radius:10px;padding:6px 12px;font-size:14px;margin-bottom:8px}
+.cardio p{margin:6px 0;line-height:1.45;font-size:15px}
+.cardio h3{margin:14px 0 6px;font-size:16px}
+.passos{display:flex;flex-direction:column;gap:6px}
+.passo{display:flex;align-items:center;gap:10px;background:var(--fundo);border-radius:10px;padding:10px}
+.passo b{min-width:58px}
+.hist .linha{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--linha);font-size:14px}
+.hist .linha:last-child{border:0}
+.timer{position:fixed;left:14px;right:14px;bottom:76px;background:var(--texto);color:#fff;border-radius:14px;padding:12px 14px;display:none;align-items:center;justify-content:space-between;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.timer.on{display:flex}
+.timer b{font-size:24px;font-variant-numeric:tabular-nums}
+.timer button{border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:8px;padding:8px 12px;font-size:14px}
+</style>
+</head>
+<body>
+<header id="cab"></header>
+<main id="tela"></main>
+<div class="timer" id="timer"><div>Descanso <b id="tempo">1:00</b></div><button onclick="pararTimer()">Parar</button></div>
+<nav>
+  <button id="nav-semana" onclick="ir('semana')"><span>📅</span>Semana</button>
+  <button id="nav-treinos" onclick="ir('treinos')"><span>🏋️</span>Treinos</button>
+  <button id="nav-cardio" onclick="ir('cardio')"><span>🚴</span>Cardio</button>
+  <button id="nav-historico" onclick="ir('historico')"><span>📊</span>Histórico</button>
+</nav>
+
+<script>
+// ---------- DADOS DO PLANO (Geovana Alievi – Fev/Mar) ----------
+const YT = q => "https://www.youtube.com/results?search_query=" + encodeURIComponent(q + " execução correta");
+const TXT_FAIXA = (a,b) => `Ajuste a carga para conseguir fazer pelo menos ${a} repetições, sem passar de ${b}. Se passar de ${b}, está leve: aumente. Se não chegar a ${a}, está pesado: diminua.`;
+const TXT_AQ = (a,b) => `Aquecimento: 1 série de 12 com 50% da carga. Descanse 1 min. Depois aumente bem a carga e faça 3 séries de ${a} a ${b} repetições.`;
+const TXT_PIR = "Pirâmide: a cada série, menos repetições e mais carga. 1ª: 12 reps · 2ª: 10 reps · 3ª: 8 reps · 4ª: 6 reps. Descanse 1 min entre elas.";
+const TXT_PRANCHA = "Prepara o corpo e fortalece o core. Se conseguir ficar mais que 40s, fique! Tente aumentar 5 segundos a cada semana.";
+const TXT_ABD = "Use o menor impulso possível com os braços, sem passar da linha da orelha. Faça força de verdade com o abdômen.";
+
+const TREINOS = {
+  A:{nome:"Treino A", foco:"Glúteos, posterior e panturrilha", ex:[
+    {n:"Prancha abdominal", g:"Abdome", s:"2x 30-40s", d:60, t:TXT_PRANCHA},
+    {n:"Cadeira Flexora", g:"Isquiotibiais", s:"1x 12 + 3x 08-10", d:60, t:TXT_AQ(8,10), dica:"Se a mesa flexora estiver ocupada, pode fazer na cadeira flexora."},
+    {n:"Agachamento Sumô", g:"Glúteos", s:"4x 12/10/08/06", d:60, t:TXT_PIR, tec:"PIRÂMIDE"},
+    {n:"Elevação pélvica máquina", g:"Glúteos", s:"3x 08-10", d:60, t:TXT_FAIXA(8,10), dica:"Se a academia não tiver a máquina, faça livre no banco com a barra."},
+    {n:"Cadeira Abdutora tronco inclinado", g:"Glúteos", s:"3x 08-10", d:60, t:TXT_FAIXA(8,10)},
+    {n:"Panturrilha Sentado", g:"Panturrilha", s:"3x 15-20", d:60, t:TXT_FAIXA(15,20)}
+  ]},
+  B:{nome:"Treino B", foco:"Costas e ombros", ex:[
+    {n:"Abdominal Supra no Solo", g:"Abdome", s:"2x 08-15", d:60, t:TXT_ABD},
+    {n:"Puxada com Triângulo", g:"Dorsal", s:"1x 12 + 3x 10-12", d:60, t:TXT_AQ(10,12)},
+    {n:"Remada Alta na Polia com Triângulo", g:"Dorsal", s:"3x 10-12", d:60, t:TXT_FAIXA(10,12), dica:"Pode fazer sentada no banco, caixote ou step."},
+    {n:"Remada Baixa com Triângulo", g:"Dorsal", s:"3x 10-12", d:60, t:TXT_FAIXA(10,12)},
+    {n:"Elevação Lateral Sentada", g:"Deltoide", s:"3x 10-12", d:60, t:TXT_FAIXA(10,12)},
+    {n:"Elevação Frontal na Polia com Corda", g:"Deltoide", s:"3x 10-12", d:60, t:TXT_FAIXA(10,12)},
+    {n:"Remada Alta na Polia Alta", g:"Deltoide", s:"3x 10-12", d:60, t:TXT_FAIXA(10,12), dica:"Mantenha as escápulas coladas uma na outra o tempo todo!"}
+  ]},
+  C:{nome:"Treino C", foco:"Quadríceps, glúteos e panturrilha", ex:[
+    {n:"Prancha abdominal", g:"Abdome", s:"2x 30-40s", d:60, t:TXT_PRANCHA},
+    {n:"Cadeira Extensora", g:"Quadríceps", s:"1x 12 + 3x 08-10", d:60, t:TXT_AQ(8,10)},
+    {n:"Afundo no Espaldar", g:"Reabilitação", s:"3x 10-12 (cada perna)", d:60, t:"Comece sem carga. Faça todas as repetições com a perna direita, descanse 1 min, depois a esquerda, descanse 1 min, e assim por diante. O descanso é entre uma perna e outra.", dica:"Tronco levemente inclinado para frente!"},
+    {n:"Leg Press 45°", g:"Quadríceps", s:"4x 12/10/08/06", d:60, t:TXT_PIR, tec:"PIRÂMIDE"},
+    {n:"Cadeira Flexora", g:"Isquiotibiais", s:"3x 08-10", d:60, t:TXT_FAIXA(8,10)},
+    {n:"Cadeira Abdutora tronco inclinado", g:"Glúteos", s:"3x 08-10", d:60, t:TXT_FAIXA(8,10)},
+    {n:"Panturrilha no Leg Press Horizontal", g:"Panturrilha", s:"3x 15-20", d:60, t:TXT_FAIXA(15,20), aviso:"No PDF o cabeçalho diz 3x 08-10, mas a explicação fala em 15 a 20. Confirme com a Geovana."}
+  ]},
+  D:{nome:"Treino D", foco:"Costas e ombros", ex:[
+    {n:"Abdominal Supra no Solo", g:"Abdome", s:"2x 08-15", d:60, t:TXT_ABD},
+    {n:"Puxada com Triângulo", g:"Dorsal", s:"1x 12 + 3x 10-12", d:60, t:TXT_AQ(10,12)},
+    {n:"Remada Alta na Polia com Triângulo", g:"Dorsal", s:"4x 10-12", d:60, t:TXT_FAIXA(10,12), dica:"Pode fazer sentada no banco, caixote ou step.", aviso:"No PDF o cabeçalho diz 4 séries, mas a explicação diz 3. Confirme com a Geovana."},
+    {n:"Remada Baixa com Triângulo", g:"Dorsal", s:"3x 10-12", d:60, t:TXT_FAIXA(10,12)},
+    {n:"Elevação Lateral Inclinado", g:"Deltoide", s:"3x 10-12 (cada braço)", d:60, t:TXT_FAIXA(10,12)},
+    {n:"Desenvolvimento com Halter", g:"Deltoide", s:"3x 10-12", d:60, t:TXT_FAIXA(10,12)},
+    {n:"Crucifixo inverso na máquina", g:"Deltoide", s:"3x 10-12", d:60, t:TXT_FAIXA(10,12), dica:"Mantenha as escápulas coladas uma na outra o tempo todo!"}
+  ]}
+};
+// Dia da semana (0=Dom) -> treino
+const PLANO = {1:"A",3:"B",5:"C",6:"D"};
+const NOMES_DIA = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+
+// ---------- ARMAZENAMENTO ----------
+function ler(k,p){try{const v=localStorage.getItem(k);return v?JSON.parse(v):p}catch(e){return p}}
+function gravar(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+let feitos = ler("feitos",{});   // "2026-11-09": "A"
+let cargas = ler("cargas",{});   // "A-2": "25 kg"
+let sessao = ler("sessao",{});   // {data, treino, ok:[idx]}
+
+// ---------- DATAS ----------
+const iso = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const hojeD = () => {const d=new Date();d.setHours(12,0,0,0);return d};
+function inicioSemana(d){const r=new Date(d);const w=(r.getDay()+6)%7;r.setDate(r.getDate()-w);return r}
+const fmt = d => d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"});
+let desloc = 0;
+
+// ---------- NAVEGAÇÃO ----------
+let pilha = [];
+let atual = "semana";
+function ir(t, arg, empilhar){
+  if(empilhar) pilha.push([atual, telaArg]);
+  else pilha = [];
+  atual = t; telaArg = arg;
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("ativo", b.id==="nav-"+t || (t==="treino" && b.id==="nav-treinos")));
+  ({semana:telaSemana, treinos:telaTreinos, treino:telaTreino, cardio:telaCardio, historico:telaHistorico})[t](arg);
+  window.scrollTo(0,0);
+}
+let telaArg;
+window.voltar = function(){
+  if(pilha.length){const [t,a]=pilha.pop();atual=t;telaArg=a;({semana:telaSemana,treinos:telaTreinos,treino:telaTreino,cardio:telaCardio,historico:telaHistorico})[t](a);return true}
+  if(atual!=="semana"){ir("semana");return true}
+  return false;
+};
+const cab = (t,s,voltar) => document.getElementById("cab").innerHTML =
+  (voltar?`<button class="voltarBtn" onclick="voltar()">← Voltar</button>`:"")+`<h1>${t}</h1>${s?`<p>${s}</p>`:""}`;
+const cor = l => `var(--${l})`;
+
+// ---------- TELA: SEMANA ----------
+function telaSemana(){
+  const hoje = hojeD();
+  const ini = inicioSemana(hoje); ini.setDate(ini.getDate()+desloc*7);
+  const fim = new Date(ini); fim.setDate(fim.getDate()+6);
+  cab("Olá, Angela! 💪", "Plano de treino · Geovana Alievi");
+  let feitosSemana = 0, html = "";
+  for(let i=0;i<7;i++){
+    const d = new Date(ini); d.setDate(d.getDate()+i);
+    const k = iso(d), w = d.getDay(), pl = PLANO[w], f = feitos[k];
+    if(f) feitosSemana++;
+    const cls = ["dia"]; if(k===iso(hoje)) cls.push("hoje"); if(f) cls.push(pl?"feito":"feito");
+    html += `<div class="${cls.join(" ")}" onclick="marcarDia('${k}')">
+      <div>${NOMES_DIA[w]}</div><div class="n">${d.getDate()}</div>
+      <div class="t" style="${f?"":pl?`color:${cor(pl)}`:""}">${f?"✓ "+f:(pl||"·")}</div></div>`;
+  }
+  const pct = Math.min(100, Math.round(feitosSemana/4*100));
+  const wHoje = hoje.getDay(), tHoje = PLANO[wHoje], feitoHoje = feitos[iso(hoje)];
+  let prox = tHoje;
+  if(!tHoje){ for(let i=1;i<7;i++){const w=(wHoje+i)%7;if(PLANO[w]){prox=PLANO[w];var proxDia=NOMES_DIA[w];break}} }
+  document.getElementById("tela").innerHTML = `
+  <div class="card">
+    <div class="semana-top">
+      <button onclick="desloc--;telaSemana()">‹</button>
+      <b>${desloc===0?"Esta semana":fmt(ini)+" a "+fmt(fim)}</b>
+      <button onclick="desloc++;telaSemana()">›</button>
+    </div>
+    <div class="dias">${html}</div>
+    <div class="progresso"><div style="width:${pct}%"></div></div>
+    <div class="legenda">${feitosSemana} de 4 treinos na semana ${feitosSemana>=4?"🎉 Meta batida!":""} · toque num dia para marcar</div>
+  </div>
+  ${desloc===0?`<div class="card">
+    <h2>${tHoje?"Treino de hoje":"Hoje é dia de descanso 😌"}</h2>
+    <div class="treinoHoje">
+      <div class="letra" style="background:${cor(prox)}">${prox}</div>
+      <div><b>${TREINOS[prox].nome}</b><br><small style="color:var(--sub)">${tHoje?TREINOS[prox].foco:"Próximo: "+proxDia+" · "+TREINOS[prox].foco}</small></div>
+    </div>
+    ${feitoHoje?`<button class="btn verde" onclick="marcarDia('${iso(hoje)}')">✓ Treino ${feitoHoje} feito hoje</button>`
+      :`<button class="btn" onclick="ir('treino','${prox}',true)">Abrir ${TREINOS[prox].nome}</button>
+        <button class="btn claro" onclick="escolherHoje()">Marcar que treinei hoje</button>`}
+  </div>`:""}`;
+}
+function marcarDia(k){
+  if(feitos[k]){
+    if(confirm("Desmarcar o treino deste dia?")){delete feitos[k];gravar("feitos",feitos);telaSemana()}
+    return;
+  }
+  const d = new Date(k+"T12:00:00");
+  const sug = PLANO[d.getDay()] || "";
+  const r = prompt(`Qual treino você fez em ${fmt(d)}? (A, B, C ou D)`, sug);
+  if(r===null) return;
+  const l = r.trim().toUpperCase();
+  if(!TREINOS[l]){alert("Digite A, B, C ou D.");return}
+  feitos[k]=l; gravar("feitos",feitos); telaSemana();
+}
+function escolherHoje(){marcarDia(iso(hojeD()))}
+
+// ---------- TELA: LISTA DE TREINOS ----------
+function telaTreinos(){
+  cab("Meus treinos","4 treinos · 27 exercícios");
+  const dias = {A:"Segunda",B:"Quarta",C:"Sexta",D:"Sábado"};
+  document.getElementById("tela").innerHTML = `<div class="card lista-treinos">${
+    Object.keys(TREINOS).map(l=>`<div class="item" onclick="ir('treino','${l}',true)">
+      <div class="letra" style="background:${cor(l)}">${l}</div>
+      <div><b>${TREINOS[l].nome}</b> · <small>${dias[l]}</small><br><small>${TREINOS[l].foco} · ${TREINOS[l].ex.length} exercícios</small></div>
+      <div style="color:var(--sub);font-size:22px">›</div></div>`).join("")
+  }</div>`;
+}
+
+// ---------- TELA: UM TREINO ----------
+function telaTreino(l){
+  const T = TREINOS[l], hoje = iso(hojeD());
+  if(sessao.data!==hoje || sessao.treino!==l) sessao = {data:hoje, treino:l, ok:[]};
+  cab(T.nome, T.foco, true);
+  const okN = sessao.ok.length;
+  document.getElementById("tela").innerHTML = `
+  <div class="card"><div class="progresso" style="margin:0 0 6px"><div style="width:${okN/T.ex.length*100}%"></div></div>
+  <div class="legenda">${okN} de ${T.ex.length} exercícios feitos hoje · toque no nome para ver como fazer e anotar a carga</div></div>
+  ${T.ex.map((e,i)=>{
+    const ok = sessao.ok.includes(i), ck = l+"-"+i;
+    return `<div class="ex ${ok?"ok":""}" id="ex${i}">
+      <div class="ex-top" onclick="abrir(${i})">
+        <div class="num">${ok?"✓":i+1}</div>
+        <div class="info"><div class="nome">${e.n}</div><span class="tag">${e.g}</span>${e.tec?` <span class="tag" style="background:#FDF1E2;color:#B5650B">${e.tec}</span>`:""}</div>
+      </div>
+      <div class="chips"><span class="chip">${e.s}</span><span class="chip lar">⏱ ${e.d}s</span>${cargas[ck]?`<span class="chip" style="background:#E3F5EC;color:#1F7A4D">🏋️ ${esc(cargas[ck])}</span>`:""}</div>
+      <div class="det">
+        ${e.aviso?`<div class="aviso">⚠️ ${e.aviso}</div>`:""}
+        ${e.dica?`<div class="dica">💡 ${e.dica}</div>`:""}
+        <div>${e.t}</div>
+        <div class="carga"><span>Minha carga:</span><input value="${esc(cargas[ck]||"")}" placeholder="ex: 20 kg" onchange="salvarCarga('${ck}',this.value)"></div>
+      </div>
+      <div class="acoes">
+        <a class="vid" href="${YT(e.n)}">▶ Vídeo</a>
+        <button class="mais" onclick="timer(${e.d})">⏱ Descanso</button>
+        <button class="feito-btn" onclick="feitoEx('${l}',${i})">${ok?"✓ Feito":"Feito"}</button>
+      </div>
+    </div>`}).join("")}
+  ${feitos[hoje]?`<button class="btn verde" disabled>✓ Treino ${feitos[hoje]} marcado hoje</button>`
+    :`<button class="btn verde" onclick="concluir('${l}')">Concluir treino de hoje</button>`}`;
+}
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function abrir(i){document.getElementById("ex"+i).classList.toggle("aberto")}
+function salvarCarga(k,v){v=v.trim(); if(v) cargas[k]=v; else delete cargas[k]; gravar("cargas",cargas)}
+function feitoEx(l,i){
+  const p = sessao.ok.indexOf(i);
+  if(p>=0) sessao.ok.splice(p,1); else sessao.ok.push(i);
+  gravar("sessao",sessao); telaTreino(l);
+  if(sessao.ok.length===TREINOS[l].ex.length && !feitos[iso(hojeD())]){
+    setTimeout(()=>{ if(confirm("Todos os exercícios feitos! 🎉 Marcar o treino de hoje como concluído?")) concluir(l) },200);
+  }
+}
+function concluir(l){feitos[iso(hojeD())]=l;gravar("feitos",feitos);alert("Treino "+l+" marcado! Mandou bem 💪");ir("semana")}
+
+// ---------- TIMER DE DESCANSO ----------
+let tInt=null;
+function timer(s){
+  pararTimer(); let r=s; const el=document.getElementById("tempo");
+  const show=()=>el.textContent=Math.floor(r/60)+":"+String(r%60).padStart(2,"0");
+  document.getElementById("timer").classList.add("on"); show();
+  tInt=setInterval(()=>{r--;show();if(r<=0){pararTimer();try{navigator.vibrate&&navigator.vibrate([300,150,300])}catch(e){}}},1000);
+}
+function pararTimer(){clearInterval(tInt);document.getElementById("timer").classList.remove("on")}
+
+// ---------- TELA: CARDIO ----------
+function telaCardio(){
+  cab("Cardio","Adaptável à sua disposição");
+  document.getElementById("tela").innerHTML = `
+  <div class="card cardio">
+    <h2>⚡ Dias com mais disposição</h2>
+    <p>HIIT leve na <b>bicicleta ou elíptico</b>, até 20 minutos. Não é para sair exausta, é para elevar o metabolismo com segurança.</p>
+    <div class="passos">
+      <div class="passo"><b>3 min</b>Ritmo leve para aquecer</div>
+      <div class="passo" style="background:#FDF1E2"><b>1 min</b>Um pouco mais rápido</div>
+      <div class="passo"><b>2 min</b>Ritmo leve</div>
+      <div class="passo" style="background:#EAF1FD">🔁 Repete o ciclo até no máximo 20 min</div>
+      <div class="passo"><b>2–3 min</b>Bem leve para desacelerar</div>
+    </div>
+    <p style="font-size:14px;color:var(--sub)">"Mais rápido" = mais esforço, mas ainda respirando bem, sem ficar mal ou tonta.</p>
+  </div>
+  <div class="card cardio">
+    <h2>🌙 Dias com menos energia</h2>
+    <p>Cardio contínuo: <b>bicicleta, esteira (caminhada) ou elíptico</b>.</p>
+    <div class="passos">
+      <div class="passo"><b>Ritmo</b>Leve a moderado</div>
+      <div class="passo"><b>Teste</b>Dá para conversar, mesmo um pouco ofegante</div>
+      <div class="passo"><b>Tempo</b>20 a 30 minutos</div>
+    </div>
+  </div>
+  <div class="card cardio">
+    <h2>💙 O mais importante</h2>
+    <p>Não é sobre fazer o mais difícil, é sobre fazer o que seu corpo permite naquele dia. <b>Consistência vale mais que intensidade.</b></p>
+  </div>`;
+}
+
+// ---------- TELA: HISTÓRICO ----------
+function telaHistorico(){
+  cab("Histórico","Seus treinos marcados");
+  const ks = Object.keys(feitos).sort().reverse();
+  const cont = {A:0,B:0,C:0,D:0}; ks.forEach(k=>cont[feitos[k]]++);
+  // sequência de semanas com 4+ treinos
+  const porSemana = {};
+  ks.forEach(k=>{const s=iso(inicioSemana(new Date(k+"T12:00:00")));porSemana[s]=(porSemana[s]||0)+1});
+  let seq=0; const s0=inicioSemana(hojeD());
+  for(let i=1;i<200;i++){const d=new Date(s0);d.setDate(d.getDate()-7*i);if((porSemana[iso(d)]||0)>=4)seq++;else break}
+  if((porSemana[iso(s0)]||0)>=4) seq++;
+  document.getElementById("tela").innerHTML = `
+  <div class="card">
+    <h2>Resumo</h2>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center">
+      ${"ABCD".split("").map(l=>`<div><div class="letra" style="background:${cor(l)};margin:0 auto 4px;width:44px;height:44px;font-size:20px">${l}</div><b>${cont[l]}</b><br><small style="color:var(--sub)">vezes</small></div>`).join("")}
+    </div>
+    <p class="legenda" style="margin-top:12px">Total: <b>${ks.length}</b> treinos · Semanas seguidas com meta batida: <b>${seq}</b> 🔥</p>
+  </div>
+  <div class="card hist"><h2>Últimos treinos</h2>
+    ${ks.length?ks.slice(0,40).map(k=>{const d=new Date(k+"T12:00:00");return `<div class="linha"><span>${NOMES_DIA[d.getDay()]}, ${d.toLocaleDateString("pt-BR")}</span><b style="color:${cor(feitos[k])}">Treino ${feitos[k]}</b></div>`}).join("")
+      :`<p class="legenda">Nenhum treino marcado ainda. Bora começar! 💪</p>`}
+  </div>`;
+}
+
+ir("semana");
+</script>
+</body>
+</html>
