@@ -16,8 +16,9 @@ header{background:var(--azul);color:#fff;padding:18px 16px 14px}
 header h1{margin:0;font-size:22px}
 header p{margin:4px 0 0;opacity:.85;font-size:14px}
 main{padding:14px 14px 90px}
+body.comTimer main{padding-bottom:200px}
 nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--linha);display:flex}
-nav button{flex:1;border:0;background:none;padding:10px 0 12px;font-size:13px;color:var(--sub);font-weight:600}
+nav button{flex:1;border:0;background:none;padding:10px 0 12px;font-size:12px;color:var(--sub);font-weight:600}
 nav button span{display:block;font-size:20px;margin-bottom:2px}
 nav button.ativo{color:var(--azul)}
 .card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(20,40,80,.08)}
@@ -84,22 +85,60 @@ h2{font-size:17px;margin:4px 0 10px}
 .zoom.on{display:flex}
 .zoom img{max-width:100%;max-height:40vh;border-radius:12px}
 .zoom p{color:#fff;margin:0;font-size:14px}
-.timer{position:fixed;left:14px;right:14px;bottom:76px;background:var(--texto);color:#fff;border-radius:14px;padding:12px 14px;display:none;align-items:center;justify-content:space-between;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.timer{position:fixed;left:14px;right:14px;bottom:76px;background:var(--texto);color:#fff;border-radius:14px;padding:12px 14px;display:none;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 4px 14px rgba(0,0,0,.25);z-index:5;transition:background .3s}
 .timer.on{display:flex}
-.timer b{font-size:24px;font-variant-numeric:tabular-nums}
-.timer button{border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:8px;padding:8px 12px;font-size:14px}
+.timer.fim{background:var(--verde)}
+.timer small{display:block;font-size:12px;opacity:.8}
+.timer b{font-size:26px;font-variant-numeric:tabular-nums}
+.timer .tp{font-size:12px;opacity:.9;margin-top:2px}
+.timer .tb{display:flex;gap:6px;flex-shrink:0}
+.timer button{border:0;background:rgba(255,255,255,.15);color:#fff;border-radius:8px;padding:9px 11px;font-size:14px;font-weight:700}
+.series{padding:0 12px 12px}
+.series-top{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--sub);margin-bottom:6px}
+.series-top b{color:var(--texto);font-size:14px}
+.bolas{display:flex;gap:8px;flex-wrap:wrap}
+.bola{border:2px solid var(--linha);background:#fff;border-radius:12px;min-width:54px;padding:6px 4px;text-align:center;color:var(--sub);font-family:inherit}
+.bola .bn{display:block;font-size:17px;font-weight:800;color:var(--texto)}
+.bola .br{display:block;font-size:11px}
+.bola.prox{border-color:var(--azul2);background:#EAF1FD}
+.bola.ok{background:var(--verde);border-color:var(--verde);color:#fff}
+.bola.ok .bn{color:#fff}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{border:2px solid var(--linha);background:#fff;border-radius:10px;min-width:42px;padding:8px 10px;font-size:15px;font-weight:800;color:var(--sub);font-family:inherit}
+.seg button.sel{color:#fff;border-color:transparent}
+.plano-linha{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--linha)}
+.plano-linha:last-child{border:0}
+.plano-linha b{font-size:15px;min-width:74px}
+.plano-linha .seg button{min-width:36px;padding:7px 8px;font-size:14px}
+.trocar{margin-top:12px;padding-top:12px;border-top:1px solid var(--linha)}
+.grafico svg{display:block;width:100%;height:auto}
+.peso-form{display:flex;gap:8px;align-items:stretch}
+.peso-form input{border:1px solid var(--linha);border-radius:10px;padding:11px 10px;font-size:16px;font-family:inherit;min-width:0}
+.peso-form input[type=date]{flex:1.3}
+#pKg{flex:1}
+.resumo3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.resumo3 div{background:var(--fundo);border-radius:12px;padding:10px 4px}
+.resumo3 small{display:block;color:var(--sub);font-size:12px}
+.resumo3 b{font-size:18px}
+.lembrete{background:#FDF1E2;color:#8A5300;border-radius:12px;padding:12px;font-size:14px;margin-bottom:12px}
+.del{border:0;background:none;color:var(--sub);font-size:18px;padding:0 4px;margin-left:8px}
+.trocar small{display:block;color:var(--sub);margin-bottom:6px}
 </style>
 </head>
 <body>
 <header id="cab"></header>
 <main id="tela"></main>
 <div class="zoom" id="zoom" onclick="this.classList.remove('on')"></div>
-<div class="timer" id="timer"><div>Descanso <b id="tempo">1:00</b></div><button onclick="pararTimer()">Parar</button></div>
+<div class="timer" id="timer">
+  <div><small id="timerTit">Descanso</small><b id="tempo">1:00</b><div class="tp" id="timerProx"></div></div>
+  <div class="tb"><button id="timerMais" onclick="maisTempo(15)">+15s</button><button onclick="pararTimer()">Fechar</button></div>
+</div>
 <nav>
   <button id="nav-semana" onclick="ir('semana')"><span>📅</span>Semana</button>
   <button id="nav-treinos" onclick="ir('treinos')"><span>🏋️</span>Treinos</button>
   <button id="nav-cardio" onclick="ir('cardio')"><span>🚴</span>Cardio</button>
   <button id="nav-historico" onclick="ir('historico')"><span>📊</span>Histórico</button>
+  <button id="nav-peso" onclick="ir('peso')"><span>⚖️</span>Peso</button>
 </nav>
 
 <script>
@@ -159,16 +198,23 @@ const FOTOS = {
   "Elevação Lateral Inclinado":"One-Arm_Incline_Lateral_Raise","Desenvolvimento com Halter":"Dumbbell_Shoulder_Press",
   "Crucifixo inverso na máquina":"Reverse_Machine_Flyes"
 };
-// Dia da semana (0=Dom) -> treino
-const PLANO = {1:"A",3:"B",5:"C",6:"D"};
+const VERSAO = "1.4";
 const NOMES_DIA = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+const DIA_LONGO = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
 
 // ---------- ARMAZENAMENTO ----------
 function ler(k,p){try{const v=localStorage.getItem(k);return v?JSON.parse(v):p}catch(e){return p}}
 function gravar(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function apagar(k){try{localStorage.removeItem(k)}catch(e){}}
 let feitos = ler("feitos",{});   // "2026-11-09": "A"
 let cargas = ler("cargas",{});   // "A-2": "25 kg"
-let sessao = ler("sessao",{});   // {data, treino, ok:[idx]}
+let sessao = ler("sessao",{});   // {data, treino, ok:[idx], series:{idx:qtd}}
+// Plano da semana escolhido por você: dia da semana (0=Dom) -> treino. Dia sem treino = descanso.
+let PLANO = ler("plano", {1:"A",3:"B",5:"C",6:"D"});
+// Troca só de um dia específico: "2026-11-11": "B"  ("" = descanso naquele dia)
+let escolhas = ler("escolhas", {});
+const meta = () => Math.max(1, Object.keys(PLANO).length);
+function treinoDoDia(d){const k=iso(d); if(k in escolhas) return escolhas[k]||null; return PLANO[d.getDay()]||null}
 
 // ---------- DATAS ----------
 const iso = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
@@ -185,13 +231,13 @@ function ir(t, arg, empilhar){
   else pilha = [];
   atual = t; telaArg = arg;
   document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("ativo", b.id==="nav-"+t || (t==="treino" && b.id==="nav-treinos")));
-  ({semana:telaSemana, treinos:telaTreinos, treino:telaTreino, cardio:telaCardio, historico:telaHistorico})[t](arg);
+  ({semana:telaSemana, treinos:telaTreinos, treino:telaTreino, cardio:telaCardio, historico:telaHistorico, peso:telaPeso})[t](arg);
   window.scrollTo(0,0);
 }
 let telaArg;
 window.voltar = function(){
   const z=document.getElementById("zoom");if(z.classList.contains("on")){z.classList.remove("on");return true}
-  if(pilha.length){const [t,a]=pilha.pop();atual=t;telaArg=a;({semana:telaSemana,treinos:telaTreinos,treino:telaTreino,cardio:telaCardio,historico:telaHistorico})[t](a);return true}
+  if(pilha.length){const [t,a]=pilha.pop();atual=t;telaArg=a;({semana:telaSemana,treinos:telaTreinos,treino:telaTreino,cardio:telaCardio,historico:telaHistorico, peso:telaPeso})[t](a);return true}
   if(atual!=="semana"){ir("semana");return true}
   return false;
 };
@@ -204,21 +250,27 @@ function telaSemana(){
   const hoje = hojeD();
   const ini = inicioSemana(hoje); ini.setDate(ini.getDate()+desloc*7);
   const fim = new Date(ini); fim.setDate(fim.getDate()+6);
-  cab("Olá, Angela! 💪", "Plano de treino · Geovana Alievi · versão 1.3 (com fotos)");
+  cab("Olá, Angela! 💪", "Plano de treino · Geovana Alievi · versão "+VERSAO);
   let feitosSemana = 0, html = "";
   for(let i=0;i<7;i++){
     const d = new Date(ini); d.setDate(d.getDate()+i);
-    const k = iso(d), w = d.getDay(), pl = PLANO[w], f = feitos[k];
+    const k = iso(d), w = d.getDay(), pl = treinoDoDia(d), f = feitos[k];
     if(f) feitosSemana++;
-    const cls = ["dia"]; if(k===iso(hoje)) cls.push("hoje"); if(f) cls.push(pl?"feito":"feito");
+    const cls = ["dia"]; if(k===iso(hoje)) cls.push("hoje"); if(f) cls.push("feito");
     html += `<div class="${cls.join(" ")}" onclick="marcarDia('${k}')">
       <div>${NOMES_DIA[w]}</div><div class="n">${d.getDate()}</div>
       <div class="t" style="${f?"":pl?`color:${cor(pl)}`:""}">${f?"✓ "+f:(pl||"·")}</div></div>`;
   }
-  const pct = Math.min(100, Math.round(feitosSemana/4*100));
-  const wHoje = hoje.getDay(), tHoje = PLANO[wHoje], feitoHoje = feitos[iso(hoje)];
-  let prox = tHoje;
-  if(!tHoje){ for(let i=1;i<7;i++){const w=(wHoje+i)%7;if(PLANO[w]){prox=PLANO[w];var proxDia=NOMES_DIA[w];break}} }
+  const pct = Math.min(100, Math.round(feitosSemana/meta()*100));
+  const tHoje = treinoDoDia(hoje), feitoHoje = feitos[iso(hoje)];
+  let prox = tHoje, proxDia = "";
+  if(!tHoje){ for(let i=1;i<=7;i++){const d=new Date(hoje);d.setDate(d.getDate()+i);const t=treinoDoDia(d);if(t){prox=t;proxDia=NOMES_DIA[d.getDay()];break}} }
+  if(!prox) prox = "A";
+  const planoHoje = PLANO[hoje.getDay()] || "";
+  const opcoes = ["A","B","C","D",""].map(l=>{
+    const sel = (tHoje||"")===l;
+    return `<button class="${sel?"sel":""}" style="${sel?`background:${l?cor(l):"var(--sub)"}`:""}" onclick="escolherTreinoHoje('${l}')">${l||"Descanso"}</button>`;
+  }).join("");
   document.getElementById("tela").innerHTML = `
   <div class="card">
     <div class="semana-top">
@@ -228,18 +280,26 @@ function telaSemana(){
     </div>
     <div class="dias">${html}</div>
     <div class="progresso"><div style="width:${pct}%"></div></div>
-    <div class="legenda">${feitosSemana} de 4 treinos na semana ${feitosSemana>=4?"🎉 Meta batida!":""} · toque num dia para marcar</div>
+    <div class="legenda">${feitosSemana} de ${meta()} treinos na semana ${feitosSemana>=meta()?"🎉 Meta batida!":""} · toque num dia para marcar</div>
   </div>
   ${desloc===0?`<div class="card">
     <h2>${tHoje?"Treino de hoje":"Hoje é dia de descanso 😌"}</h2>
     <div class="treinoHoje">
       <div class="letra" style="background:${cor(prox)}">${prox}</div>
-      <div><b>${TREINOS[prox].nome}</b><br><small style="color:var(--sub)">${tHoje?TREINOS[prox].foco:"Próximo: "+proxDia+" · "+TREINOS[prox].foco}</small></div>
+      <div><b>${TREINOS[prox].nome}</b><br><small style="color:var(--sub)">${tHoje?TREINOS[prox].foco:(proxDia?"Próximo: "+proxDia+" · ":"")+TREINOS[prox].foco}</small></div>
     </div>
     ${feitoHoje?`<button class="btn verde" onclick="marcarDia('${iso(hoje)}')">✓ Treino ${feitoHoje} feito hoje</button>`
       :`<button class="btn" onclick="ir('treino','${prox}',true)">Abrir ${TREINOS[prox].nome}</button>
         <button class="btn claro" onclick="escolherHoje()">Marcar que treinei hoje</button>`}
-  </div>`:""}`;
+    ${feitoHoje?"":`<div class="trocar"><small>Quer fazer outro treino hoje? Toque para trocar${(tHoje||"")!==planoHoje?` · <a href="#" onclick="escolherTreinoHoje('${planoHoje}');return false">voltar ao plano</a>`:""}</small><div class="seg">${opcoes}</div></div>`}
+  </div>`:""}
+  ${desloc===0&&pesagemPendente()?`<div class="lembrete" onclick="ir('peso')">⚖️ <b>Hora de se pesar!</b> ${pesos.length?"Já faz "+diasDesde(pesos[pesos.length-1].d)+" dias da última pesagem.":"Registre seu primeiro peso."} Toque aqui.</div>`:""}
+  ${desloc===0?`<button class="btn claro" style="margin-top:0" onclick="ir('treinos')">📅 Escolher o treino de cada dia da semana</button>`:""}`;
+}
+function escolherTreinoHoje(l){
+  const d = hojeD(), k = iso(d);
+  if((PLANO[d.getDay()]||"")===l) delete escolhas[k]; else escolhas[k]=l;
+  gravar("escolhas",escolhas); telaSemana();
 }
 function marcarDia(k){
   if(feitos[k]){
@@ -247,7 +307,7 @@ function marcarDia(k){
     return;
   }
   const d = new Date(k+"T12:00:00");
-  const sug = PLANO[d.getDay()] || "";
+  const sug = treinoDoDia(d) || "";
   const r = prompt(`Qual treino você fez em ${fmt(d)}? (A, B, C ou D)`, sug);
   if(r===null) return;
   const l = r.trim().toUpperCase();
@@ -259,33 +319,69 @@ function escolherHoje(){marcarDia(iso(hojeD()))}
 // ---------- TELA: LISTA DE TREINOS ----------
 function telaTreinos(){
   cab("Meus treinos","4 treinos · 27 exercícios");
-  const dias = {A:"Segunda",B:"Quarta",C:"Sexta",D:"Sábado"};
-  document.getElementById("tela").innerHTML = `<div class="card lista-treinos">${
+  const ordem = [1,2,3,4,5,6,0];
+  const dias = l => ordem.filter(w=>PLANO[w]===l).map(w=>NOMES_DIA[w]).join(", ") || "sem dia fixo";
+  const linhas = ordem.map(w=>`<div class="plano-linha"><b>${DIA_LONGO[w]}</b><div class="seg">${
+    ["","A","B","C","D"].map(l=>{const sel=(PLANO[w]||"")===l;
+      return `<button class="${sel?"sel":""}" style="${sel?`background:${l?cor(l):"var(--sub)"}`:""}" onclick="definirPlano(${w},'${l}')">${l||"—"}</button>`}).join("")
+  }</div></div>`).join("");
+  document.getElementById("tela").innerHTML = `
+  <div class="card"><h2>📅 Minha semana</h2>
+    <p class="legenda" style="margin:0 0 6px">Escolha qual treino fazer em cada dia. "—" é dia de descanso. Meta da semana: <b>${meta()} treinos</b>.</p>
+    ${linhas}
+  </div>
+  <div class="card lista-treinos">${
     Object.keys(TREINOS).map(l=>`<div class="item" onclick="ir('treino','${l}',true)">
       <div class="letra" style="background:${cor(l)}">${l}</div>
-      <div><b>${TREINOS[l].nome}</b> · <small>${dias[l]}</small><br><small>${TREINOS[l].foco} · ${TREINOS[l].ex.length} exercícios</small></div>
+      <div><b>${TREINOS[l].nome}</b> · <small>${dias(l)}</small><br><small>${TREINOS[l].foco} · ${TREINOS[l].ex.length} exercícios</small></div>
       <div style="color:var(--sub);font-size:22px">›</div></div>`).join("")
   }</div>`;
 }
+function definirPlano(w,l){
+  if(l) PLANO[w]=l; else delete PLANO[w];
+  gravar("plano",PLANO); telaTreinos();
+}
 
 // ---------- TELA: UM TREINO ----------
-function telaTreino(l){
-  const T = TREINOS[l], hoje = iso(hojeD());
-  if(sessao.data!==hoje || sessao.treino!==l) sessao = {data:hoje, treino:l, ok:[]};
-  cab(T.nome, T.foco, true);
-  const okN = sessao.ok.length;
-  document.getElementById("tela").innerHTML = `
-  <div class="card"><div class="progresso" style="margin:0 0 6px"><div style="width:${okN/T.ex.length*100}%"></div></div>
-  <div class="legenda">${okN} de ${T.ex.length} exercícios feitos hoje · toque no nome para ver como fazer e anotar a carga</div></div>
-  ${T.ex.map((e,i)=>{
-    const ok = sessao.ok.includes(i), ck = l+"-"+i;
-    return `<div class="ex ${ok?"ok":""}" id="ex${i}">
+// Transforma "1x 12 + 3x 08-10", "4x 12/10/08/06", "3x 10-12 (cada perna)" numa lista de séries
+function series(e){
+  const cada = /cada/i.test(e.s), membro = /braço/i.test(e.s) ? "braço" : "perna";
+  const partes = e.s.replace(/\(.*?\)/g,"").split("+").map(p=>p.trim()).filter(Boolean);
+  let out = [];
+  partes.forEach((p,pi)=>{
+    const m = p.match(/^(\d+)\s*x\s*(.+)$/i); if(!m) return;
+    const n = +m[1], r = m[2].trim(), lista = r.split("/");
+    for(let k=0;k<n;k++){
+      const reps = lista.length===n ? lista[k] : r;
+      out.push({reps, aq: partes.length>1 && pi===0 && n===1});
+    }
+  });
+  if(!out.length) out = [{reps:e.s, aq:false}];
+  const res = []; let num = 0;
+  out.forEach(o=>{
+    if(!o.aq) num++;
+    if(cada){
+      const base = o.aq ? "aquecimento" : "série "+num;
+      res.push({n:(o.aq?"Aq":num)+"D", sub:o.reps+" dir.", aq:o.aq, txt:base+" · "+membro+" direita"});
+      res.push({n:(o.aq?"Aq":num)+"E", sub:o.reps+" esq.", aq:o.aq, txt:base+" · "+membro+" esquerda"});
+    } else res.push({n:o.aq?"Aq":String(num), sub:o.aq?o.reps+" aquec.":o.reps, aq:o.aq, txt:o.aq?"aquecimento":"série "+num});
+  });
+  return res;
+}
+function exHtml(l,i,aberto){
+  const T = TREINOS[l], e = T.ex[i], ok = sessao.ok.includes(i), ck = l+"-"+i;
+  const S = series(e), c = Math.min(sessao.series[i]||0, S.length), faltam = S.length - c;
+  return `<div class="ex ${ok?"ok":""} ${aberto?"aberto":""}" id="ex${i}">
       <div class="ex-top" onclick="abrir(${i})">
         <div class="num">${ok?"✓":i+1}</div>
         <div class="info"><div class="nome">${e.n}</div><span class="tag">${e.g}</span>${e.tec?` <span class="tag" style="background:#FDF1E2;color:#B5650B">${e.tec}</span>`:""}</div>
       </div>
       ${FOTOS[e.n]?`<div class="fotos" onclick="verFoto('${FOTOS[e.n]}')"><div><img src="img/${FOTOS[e.n]}_0.jpg" loading="lazy"><span>Início</span></div><div><img src="img/${FOTOS[e.n]}_1.jpg" loading="lazy"><span>Fim</span></div></div>`:""}
       <div class="chips"><span class="chip">${e.s}</span><span class="chip lar">⏱ ${e.d}s</span>${cargas[ck]?`<span class="chip" style="background:#E3F5EC;color:#1F7A4D">🏋️ ${esc(cargas[ck])}</span>`:""}</div>
+      <div class="series">
+        <div class="series-top"><b>Séries</b><span>${faltam===0?"✓ Todas feitas!":`${c} de ${S.length} feitas · falta${faltam>1?"m":""} <b>${faltam}</b>`}</span></div>
+        <div class="bolas">${S.map((s,j)=>`<button class="bola ${j<c?"ok":j===c?"prox":""}" onclick="marcarSerie('${l}',${i},${j})"><span class="bn">${j<c?"✓":s.n}</span><span class="br">${esc(s.sub)}</span></button>`).join("")}</div>
+      </div>
       <div class="det">
         ${e.aviso?`<div class="aviso">⚠️ ${e.aviso}</div>`:""}
         ${e.dica?`<div class="dica">💡 ${e.dica}</div>`:""}
@@ -297,33 +393,141 @@ function telaTreino(l){
         <button class="mais" onclick="timer(${e.d})">⏱ Descanso</button>
         <button class="feito-btn" onclick="feitoEx('${l}',${i})">${ok?"✓ Feito":"Feito"}</button>
       </div>
-    </div>`}).join("")}
+    </div>`;
+}
+function progHtml(l){
+  const T = TREINOS[l], okN = sessao.ok.length;
+  return `<div class="progresso" style="margin:0 0 6px"><div style="width:${okN/T.ex.length*100}%"></div></div>
+  <div class="legenda">${okN} de ${T.ex.length} exercícios feitos hoje · ao terminar cada série, toque na bolinha dela: o descanso começa sozinho</div>`;
+}
+function prepararSessao(l){
+  const hoje = iso(hojeD());
+  if(sessao.data!==hoje || sessao.treino!==l) sessao = {data:hoje, treino:l, ok:[], series:{}};
+  if(!sessao.series) sessao.series = {};
+}
+function telaTreino(l){
+  const T = TREINOS[l], hoje = iso(hojeD());
+  prepararSessao(l);
+  cab(T.nome, T.foco, true);
+  document.getElementById("tela").innerHTML = `
+  <div class="card" id="prog">${progHtml(l)}</div>
+  ${T.ex.map((e,i)=>exHtml(l,i,false)).join("")}
   ${feitos[hoje]?`<button class="btn verde" disabled>✓ Treino ${feitos[hoje]} marcado hoje</button>`
     :`<button class="btn verde" onclick="concluir('${l}')">Concluir treino de hoje</button>`}`;
+}
+function atualizarEx(l,i){
+  const el = document.getElementById("ex"+i); if(!el) return;
+  el.outerHTML = exHtml(l,i,el.classList.contains("aberto"));
+  document.getElementById("prog").innerHTML = progHtml(l);
 }
 function verFoto(id){const z=document.getElementById("zoom");z.innerHTML=`<p>Início</p><img src="img/${id}_0.jpg"><p>Fim</p><img src="img/${id}_1.jpg"><p style="opacity:.7">Toque para fechar</p>`;z.classList.add("on")}
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function abrir(i){document.getElementById("ex"+i).classList.toggle("aberto")}
 function salvarCarga(k,v){v=v.trim(); if(v) cargas[k]=v; else delete cargas[k]; gravar("cargas",cargas)}
-function feitoEx(l,i){
+function marcarOk(i,ok){
   const p = sessao.ok.indexOf(i);
-  if(p>=0) sessao.ok.splice(p,1); else sessao.ok.push(i);
-  gravar("sessao",sessao); telaTreino(l);
+  if(ok && p<0) sessao.ok.push(i);
+  if(!ok && p>=0) sessao.ok.splice(p,1);
+}
+function marcarSerie(l,i,j){
+  prepararSessao(l);
+  const T = TREINOS[l], e = T.ex[i], S = series(e);
+  const antes = sessao.series[i]||0;
+  const c = j < antes ? j : j+1;           // tocou numa já feita = desmarca dali pra frente
+  sessao.series[i] = c;
+  marcarOk(i, c===S.length);
+  gravar("sessao",sessao); atualizarEx(l,i);
+  if(c <= antes) return;
+  if(c < S.length){
+    timer(e.d, `Próxima: ${S[c].txt} (${e.n})`);
+  } else {
+    const prox = T.ex.findIndex((x,k)=>!sessao.ok.includes(k));
+    if(prox>=0) timer(e.d, `Próximo exercício: ${T.ex[prox].n}`);
+    else verificarFim(l);
+  }
+}
+function feitoEx(l,i){
+  prepararSessao(l);
+  const ok = !sessao.ok.includes(i);
+  sessao.series[i] = ok ? series(TREINOS[l].ex[i]).length : 0;
+  marcarOk(i, ok);
+  gravar("sessao",sessao); atualizarEx(l,i);
+  if(ok) verificarFim(l);
+}
+function verificarFim(l){
   if(sessao.ok.length===TREINOS[l].ex.length && !feitos[iso(hojeD())]){
+    pararTimer();
     setTimeout(()=>{ if(confirm("Todos os exercícios feitos! 🎉 Marcar o treino de hoje como concluído?")) concluir(l) },200);
   }
 }
 function concluir(l){feitos[iso(hojeD())]=l;gravar("feitos",feitos);alert("Treino "+l+" marcado! Mandou bem 💪");ir("semana")}
 
 // ---------- TIMER DE DESCANSO ----------
-let tInt=null;
-function timer(s){
-  pararTimer(); let r=s; const el=document.getElementById("tempo");
-  const show=()=>el.textContent=Math.floor(r/60)+":"+String(r%60).padStart(2,"0");
-  document.getElementById("timer").classList.add("on"); show();
-  tInt=setInterval(()=>{r--;show();if(r<=0){pararTimer();try{navigator.vibrate&&navigator.vibrate([300,150,300])}catch(e){}}},1000);
+// Guarda a hora de término, então continua certo mesmo se o app for para segundo plano.
+// No celular, o aviso "Descanso acabou!" é uma notificação do Android (funciona com a tela apagada).
+let tInt=null, tFimTO=null;
+const $ = id => document.getElementById(id);
+const temPonte = () => { try { return !!(window.Android && Android.agendarDescanso); } catch(e) { return false; } };
+function timer(s, prox){
+  const fim = Date.now() + s*1000;
+  gravar("timer", {fim, prox: prox||""});
+  if(temPonte()) try{ Android.agendarDescanso(s, prox||"Hora da próxima série 💪") }catch(e){}
+  rodarTimer();
 }
-function pararTimer(){clearInterval(tInt);document.getElementById("timer").classList.remove("on")}
+function rodarTimer(){
+  const t = ler("timer", null);
+  clearInterval(tInt); clearTimeout(tFimTO);
+  if(!t){ return; }
+  if(Date.now() - t.fim > 60000){ apagar("timer"); $("timer").classList.remove("on"); document.body.classList.remove("comTimer"); return; }
+  const box = $("timer");
+  box.classList.add("on"); box.classList.remove("fim"); document.body.classList.add("comTimer");
+  $("timerTit").textContent = "Descanso"; $("timerMais").style.display = "";
+  $("timerProx").textContent = t.prox || "";
+  const tick = () => {
+    const r = Math.ceil((t.fim - Date.now())/1000);
+    if(r <= 0){ clearInterval(tInt); fimTimer(t); return; }
+    $("tempo").textContent = Math.floor(r/60)+":"+String(r%60).padStart(2,"0");
+  };
+  tick(); tInt = setInterval(tick, 250);
+}
+function fimTimer(t){
+  apagar("timer");
+  const box = $("timer");
+  box.classList.add("on","fim"); document.body.classList.add("comTimer");
+  $("timerTit").textContent = "Descanso acabou! 💪";
+  $("tempo").textContent = "Bora!";
+  $("timerMais").style.display = "none";
+  if(!temPonte()){ // fora do app Android (ex.: navegador): aviso aqui mesmo
+    try{ navigator.vibrate && navigator.vibrate([250,150,250]) }catch(e){}
+    bip();
+  }
+  tFimTO = setTimeout(()=>{ if(box.classList.contains("fim")){ box.classList.remove("on","fim"); document.body.classList.remove("comTimer") } }, 8000);
+}
+function maisTempo(s){
+  const t = ler("timer", null); if(!t) return;
+  t.fim = Math.max(t.fim, Date.now()) + s*1000; gravar("timer", t);
+  if(temPonte()) try{ Android.agendarDescanso(Math.ceil((t.fim-Date.now())/1000), t.prox||"Hora da próxima série 💪") }catch(e){}
+  rodarTimer();
+}
+function pararTimer(){
+  clearInterval(tInt); clearTimeout(tFimTO); apagar("timer");
+  $("timer").classList.remove("on","fim"); document.body.classList.remove("comTimer");
+  if(temPonte()) try{ Android.cancelarDescanso() }catch(e){}
+}
+function bip(){
+  try{
+    const ctx = new (window.AudioContext||window.webkitAudioContext)();
+    [0, .25].forEach(dt=>{
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = "sine"; o.frequency.value = 880;
+      g.gain.setValueAtTime(.0001, ctx.currentTime+dt);
+      g.gain.exponentialRampToValueAtTime(.15, ctx.currentTime+dt+.02);
+      g.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime+dt+.18);
+      o.connect(g).connect(ctx.destination); o.start(ctx.currentTime+dt); o.stop(ctx.currentTime+dt+.2);
+    });
+  }catch(e){}
+}
+window.aoVoltar = () => rodarTimer();
 
 // ---------- TELA: CARDIO ----------
 function telaCardio(){
@@ -356,6 +560,78 @@ function telaCardio(){
   </div>`;
 }
 
+// ---------- TELA: PESO ----------
+let pesos = ler("pesos", []);   // [{d:"2026-11-11", kg:72.4}] em ordem de data
+const INTERVALO = 30;
+const diasDesde = k => Math.round((hojeD() - new Date(k+"T12:00:00")) / 864e5);
+const pesagemPendente = () => !pesos.length || diasDesde(pesos[pesos.length-1].d) >= INTERVALO;
+const kgf = v => v.toLocaleString("pt-BR",{minimumFractionDigits:1,maximumFractionDigits:1});
+const difTxt = v => (v>0?"+":v<0?"−":"")+kgf(Math.abs(v))+" kg";
+const difCor = v => v<0?"var(--verde)":v>0?"var(--laranja)":"var(--sub)";
+function telaPeso(){
+  cab("Evolução do peso","Pese-se a cada "+INTERVALO+" dias e registre aqui");
+  const n = pesos.length, ult = pesos[n-1], pri = pesos[0];
+  let aviso = "";
+  if(!n) aviso = `<div class="lembrete">⚖️ Registre seu primeiro peso para começar a acompanhar a evolução.</div>`;
+  else {
+    const dd = diasDesde(ult.d), falta = INTERVALO - dd;
+    const prox = new Date(ult.d+"T12:00:00"); prox.setDate(prox.getDate()+INTERVALO);
+    aviso = falta<=0 ? `<div class="lembrete">⚖️ <b>Hora de se pesar!</b> Já faz ${dd} dias da última pesagem.</div>`
+      : `<p class="legenda" style="margin:10px 0 0">Próxima pesagem: <b>${fmt(prox)}</b> (daqui ${falta} dia${falta>1?"s":""})</p>`;
+  }
+  document.getElementById("tela").innerHTML = `
+  ${n&&pesagemPendente()||!n?aviso:""}
+  <div class="card"><h2>Registrar peso</h2>
+    <div class="peso-form">
+      <input type="date" id="pData" value="${iso(hojeD())}" max="${iso(hojeD())}">
+      <input type="text" id="pKg" inputmode="decimal" placeholder="kg (ex: 68,5)">
+    </div>
+    <button class="btn verde" onclick="salvarPeso()">Salvar peso</button>
+    ${n&&!pesagemPendente()?aviso:""}
+  </div>
+  ${n?`<div class="card"><h2>Resumo</h2>
+    <div class="resumo3">
+      <div><small>Início</small><b>${kgf(pri.kg)}</b><small>${fmt(new Date(pri.d+"T12:00:00"))}</small></div>
+      <div><small>Atual</small><b>${kgf(ult.kg)}</b><small>${fmt(new Date(ult.d+"T12:00:00"))}</small></div>
+      <div><small>Total</small><b style="color:${difCor(ult.kg-pri.kg)}">${n>1?difTxt(ult.kg-pri.kg):"—"}</b><small>${n>1?diasDesde(pri.d)-diasDesde(ult.d)+" dias":"1 registro"}</small></div>
+    </div></div>`:""}
+  ${n>1?`<div class="card grafico"><h2>Gráfico da evolução</h2>${graficoPeso()}</div>`:""}
+  ${n?`<div class="card hist"><h2>Pesagens</h2>${pesos.map((p,i)=>({p,i})).reverse().map(({p,i})=>{
+      const dif = i>0 ? p.kg - pesos[i-1].kg : null;
+      return `<div class="linha"><span>${new Date(p.d+"T12:00:00").toLocaleDateString("pt-BR")}</span>
+        <span><b>${kgf(p.kg)} kg</b>${dif!==null?` <small style="color:${difCor(dif)};font-weight:700">${difTxt(dif)}</small>`:""}<button class="del" onclick="apagarPeso(${i})">×</button></span></div>`}).join("")}</div>`:""}`;
+}
+function graficoPeso(){
+  const W=340, H=190, pl=40, pr=12, pt=22, pb=28;
+  const ts = pesos.map(p=>new Date(p.d+"T12:00:00").getTime()), ks = pesos.map(p=>p.kg);
+  let mn = Math.min(...ks), mx = Math.max(...ks); const fol = Math.max(1,(mx-mn)*.25); mn-=fol; mx+=fol;
+  const t0 = ts[0], t1 = ts[ts.length-1], dt = Math.max(1,t1-t0);
+  const X = t => pl + (t-t0)/dt*(W-pl-pr), Y = k => pt + (mx-k)/(mx-mn)*(H-pt-pb);
+  const pts = pesos.map((p,i)=>[X(ts[i]),Y(p.kg)]);
+  const linha = pts.map((q,i)=>(i?"L":"M")+q[0].toFixed(1)+" "+q[1].toFixed(1)).join(" ");
+  const area = linha+` L${pts[pts.length-1][0].toFixed(1)} ${H-pb} L${pts[0][0].toFixed(1)} ${H-pb} Z`;
+  let grade = "";
+  for(let g=0;g<=3;g++){const k=mn+(mx-mn)*g/3, y=Y(k);
+    grade += `<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="#E3E8F1"/><text x="${pl-6}" y="${y+4}" font-size="10" fill="#5B6678" text-anchor="end">${kgf(k)}</text>`;}
+  const mostrar = i => pesos.length<=8 || i===0 || i===pesos.length-1 || i%Math.ceil(pesos.length/6)===0;
+  const marcas = pts.map((q,i)=>`<circle cx="${q[0]}" cy="${q[1]}" r="4.5" fill="#fff" stroke="#1E4FA3" stroke-width="2.5"/>`+
+    (mostrar(i)?`<text x="${q[0]}" y="${q[1]-9}" font-size="10.5" font-weight="700" fill="#1B2333" text-anchor="middle">${kgf(pesos[i].kg)}</text>
+    <text x="${q[0]}" y="${H-10}" font-size="10" fill="#5B6678" text-anchor="middle">${fmt(new Date(pesos[i].d+"T12:00:00"))}</text>`:"")).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico da evolução do peso">${grade}
+    <path d="${area}" fill="#3B7BE0" opacity=".12"/><path d="${linha}" fill="none" stroke="#1E4FA3" stroke-width="2.5" stroke-linejoin="round"/>${marcas}</svg>`;
+}
+function salvarPeso(){
+  const d = document.getElementById("pData").value, kg = parseFloat(String(document.getElementById("pKg").value).replace(",","."));
+  if(!d){alert("Escolha a data.");return}
+  if(!(kg>=20 && kg<=300)){alert("Digite o peso em kg, por exemplo 68,5");return}
+  pesos = pesos.filter(p=>p.d!==d); pesos.push({d, kg:Math.round(kg*10)/10});
+  pesos.sort((a,b)=>a.d<b.d?-1:1); gravar("pesos",pesos); telaPeso();
+}
+function apagarPeso(i){
+  const p = pesos[i];
+  if(confirm(`Apagar o registro de ${kgf(p.kg)} kg do dia ${new Date(p.d+"T12:00:00").toLocaleDateString("pt-BR")}?`)){pesos.splice(i,1);gravar("pesos",pesos);telaPeso()}
+}
+
 // ---------- TELA: HISTÓRICO ----------
 function telaHistorico(){
   cab("Histórico","Seus treinos marcados");
@@ -365,8 +641,8 @@ function telaHistorico(){
   const porSemana = {};
   ks.forEach(k=>{const s=iso(inicioSemana(new Date(k+"T12:00:00")));porSemana[s]=(porSemana[s]||0)+1});
   let seq=0; const s0=inicioSemana(hojeD());
-  for(let i=1;i<200;i++){const d=new Date(s0);d.setDate(d.getDate()-7*i);if((porSemana[iso(d)]||0)>=4)seq++;else break}
-  if((porSemana[iso(s0)]||0)>=4) seq++;
+  for(let i=1;i<200;i++){const d=new Date(s0);d.setDate(d.getDate()-7*i);if((porSemana[iso(d)]||0)>=meta())seq++;else break}
+  if((porSemana[iso(s0)]||0)>=meta()) seq++;
   document.getElementById("tela").innerHTML = `
   <div class="card">
     <h2>Resumo</h2>
@@ -382,6 +658,7 @@ function telaHistorico(){
 }
 
 ir("semana");
+rodarTimer();
 </script>
 </body>
 </html>
