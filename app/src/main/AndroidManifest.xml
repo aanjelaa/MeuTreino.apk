@@ -6,6 +6,12 @@
     <!-- Aviso do descanso no segundo exato (app de uso pessoal) -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <!-- Leitura das corridas do relógio (Polar Flow → Health Connect) -->
+    <uses-permission android:name="android.permission.health.READ_EXERCISE" />
+    <uses-permission android:name="android.permission.health.READ_DISTANCE" />
+    <queries>
+        <package android:name="com.google.android.apps.healthdata" />
+    </queries>
     <application android:label="Meu Treino" android:icon="@drawable/ic_launcher"
         android:theme="@android:style/Theme.Material.Light.NoActionBar" android:allowBackup="true">
         <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTask"
@@ -15,6 +21,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Privacidade" android:exported="true"
+            android:label="Meu Treino - privacidade">
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+        </activity>
+        <activity-alias android:name="ViewPermissionUsageActivity" android:exported="true"
+            android:targetActivity=".Privacidade"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+            </intent-filter>
+        </activity-alias>
         <receiver android:name=".Descanso" android:exported="false" />
     </application>
 </manifest>

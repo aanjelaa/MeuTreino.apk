@@ -221,7 +221,7 @@ const FOTOS = {
   "Elevação Lateral Inclinado":"One-Arm_Incline_Lateral_Raise","Desenvolvimento com Halter":"Dumbbell_Shoulder_Press",
   "Crucifixo inverso na máquina":"Reverse_Machine_Flyes"
 };
-const VERSAO = "1.5";
+const VERSAO = "1.6";
 const NOMES_DIA = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 const DIA_LONGO = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
 
@@ -635,6 +635,9 @@ function telaCorrida(){
   document.getElementById("tela").innerHTML = `
   <div class="card meta-run">${metaCard}</div>
   ${cardDesafio()}
+  ${temHC()?`<div class="card"><h2>⌚ Corridas do relógio</h2>
+    <p class="legenda" style="margin:-4px 0 0">Puxa do Polar Flow (via Health Connect) as corridas feitas com o relógio.${ler("hcUltima","")?" Última importação: "+ler("hcUltima",""):""}</p>
+    <button class="btn" id="btnHC" onclick="importarHC(false)">⌚ Importar do Polar</button></div>`:""}
   <div class="card"><h2>Registrar corrida</h2>
     <div class="run-form">
       <label>Data<input type="date" id="cData" value="${iso(hojeD())}" max="${iso(hojeD())}"></label>
@@ -660,12 +663,49 @@ function telaCorrida(){
   ${n?`<div class="card"><h2>Minhas corridas</h2>${corridas.map((c,i)=>({c,i})).reverse().map(({c,i})=>{
       const ok = ritmo(c) < META_RITMO, d = new Date(c.d+"T12:00:00");
       return `<div class="run-linha"><span class="ponto" style="background:${ok?"var(--verde)":"var(--laranja)"}"></span>
-        <div class="meio"><b>${kmf(c.km)} km em ${mmss(c.s)}</b><br><small>${NOMES_DIA[d.getDay()]}, ${d.toLocaleDateString("pt-BR")} · ${c.onde||"Rua"}</small></div>
+        <div class="meio"><b>${kmf(c.km)} km em ${mmss(c.s)}</b><br><small>${NOMES_DIA[d.getDay()]}, ${d.toLocaleDateString("pt-BR")} · ${c.onde||"Rua"}${c.hc?" · ⌚ relógio":""}</small></div>
         <div style="text-align:right"><b style="color:${ok?"var(--verde)":"var(--texto)"}">${mmss(ritmo(c))}</b><br><small>/km</small></div>
         <button class="del" onclick="apagarCorrida(${i})">×</button></div>`}).join("")}
     <p class="legenda" style="margin-top:8px"><span style="color:var(--verde)">●</span> no ritmo da meta · <span style="color:var(--laranja)">●</span> acima de 7:00/km</p></div>`:""}
   <button class="btn claro" onclick="ir('cardio',null,true)">🚴 Ver guia de cardio da Geovana</button>`;
 }
+// ---------- IMPORTAR DO RELÓGIO (Health Connect) ----------
+const temHC = () => !!(window.Android && window.Android.importarCorridas);
+let hcSilencioso = false;
+function importarHC(silencioso){
+  if(!temHC()) return;
+  hcSilencioso = silencioso;
+  const b = document.getElementById("btnHC"); if(b && !silencioso){b.disabled=true;b.textContent="Buscando corridas…"}
+  // busca desde o início do desafio ou 60 dias atrás, o que for mais antigo
+  const d = new Date(hojeD()); d.setDate(d.getDate()-60);
+  const desde = iso(d) < DESAFIO.desde ? iso(d) : DESAFIO.desde;
+  try{ window.Android.importarCorridas(desde, !!silencioso) }catch(e){ if(!silencioso) alert("Não foi possível abrir o Health Connect.") }
+}
+window.recebeHC = function(r){
+  const b = document.getElementById("btnHC"); if(b){b.disabled=false;b.textContent="⌚ Importar do Polar"}
+  if(!r || !r.ok){ if(!hcSilencioso) alert(r&&r.msg ? r.msg : "Não consegui ler as corridas."); return }
+  const ids = new Set(corridas.filter(c=>c.hc).map(c=>c.hc));
+  let novas=0, semDist=0, jaTinha=0;
+  for(const x of r.corridas){
+    if(ids.has(x.id)) continue;
+    const km = Math.round(x.km*100)/100;
+    if(!(km>=0.2) || !(x.s>0)){semDist++; continue}
+    // corrida já registrada à mão no mesmo dia com distância parecida: troca pela do relógio
+    const i = corridas.findIndex(c=>!c.hc && c.d===x.d && Math.abs(c.km-km)<=0.3);
+    if(i>=0){corridas.splice(i,1); jaTinha++}
+    corridas.push({d:x.d, km, s:x.s, onde:x.esteira?"Esteira":"Rua", hc:x.id});
+    novas++;
+  }
+  corridas.sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:0); gravar("corridas",corridas);
+  const agora = new Date(); gravar("hcUltima", fmt(agora)+" às "+String(agora.getHours()).padStart(2,"0")+":"+String(agora.getMinutes()).padStart(2,"0"));
+  if(atual==="corrida") telaCorrida(); else if(atual==="semana") telaSemana();
+  if(hcSilencioso && !novas) return;
+  let msg = novas ? `⌚ ${novas} corrida${novas>1?"s":""} importada${novas>1?"s":""} do relógio!` : "Nenhuma corrida nova no relógio.";
+  if(jaTinha) msg += `\n${jaTinha} que você tinha digitado foi${jaTinha>1?"ram":""} trocada${jaTinha>1?"s":""} pela versão do relógio.`;
+  if(semDist) msg += `\n${semDist} sem distância foi${semDist>1?"ram":""} ignorada${semDist>1?"s":""}.`;
+  if(!r.corridas.length && r.outros) msg += `\nAchei ${r.outros} treino${r.outros>1?"s":""} de outro tipo (não corrida). Confira se no relógio o esporte está como "Corrida".`;
+  alert(msg);
+};
 function lerTempo(){
   const m = parseInt(document.getElementById("cMin").value||"0",10), x = parseInt(document.getElementById("cSeg").value||"0",10);
   return (isNaN(m)?0:m)*60 + (isNaN(x)?0:x);
@@ -815,6 +855,7 @@ function telaHistorico(){
 
 ir("semana");
 rodarTimer();
+setTimeout(()=>importarHC(true), 800);
 </script>
 </body>
 </html>

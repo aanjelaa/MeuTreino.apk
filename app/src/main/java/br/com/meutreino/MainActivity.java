@@ -1,7 +1,7 @@
 package br.com.meutreino;
 
 import android.Manifest;
-import android.app.Activity;
+import androidx.activity.ComponentActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -14,14 +14,16 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ComponentActivity {
     private WebView web;
+    private Saude saude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setStatusBarColor(Color.parseColor("#1E4FA3"));
         Descanso.criarCanal(this);
+        saude = new Saude(this, json -> { runOnUiThread(() -> { if (web != null) web.evaluateJavascript("window.recebeHC && window.recebeHC(" + json + ")", null); }); return kotlin.Unit.INSTANCE; });
         if (Build.VERSION.SDK_INT >= 33
                 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
@@ -65,6 +67,11 @@ public class MainActivity extends Activity {
         @JavascriptInterface
         public void agendarDescanso(int segundos, String texto) {
             Descanso.agendar(MainActivity.this, segundos, texto);
+        }
+
+        @JavascriptInterface
+        public void importarCorridas(String desde, boolean silencioso) {
+            runOnUiThread(() -> saude.importar(desde, silencioso));
         }
 
         @JavascriptInterface
