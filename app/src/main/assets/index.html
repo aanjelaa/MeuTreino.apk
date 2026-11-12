@@ -116,6 +116,29 @@ h2{font-size:17px;margin:4px 0 10px}
 .peso-form input{border:1px solid var(--linha);border-radius:10px;padding:11px 10px;font-size:16px;font-family:inherit;min-width:0}
 .peso-form input[type=date]{flex:1.3}
 #pKg{flex:1}
+.bolinhas{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.bolinha{aspect-ratio:1;border-radius:50%;background:var(--fundo);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--sub);font-size:15px;max-width:52px;margin:0 auto;width:100%}
+.bolinha.on{background:var(--verde);color:#fff}
+.corre{font-size:13px;line-height:1;margin-top:2px}
+.meta-run{text-align:center}
+.meta-run .grande{font-size:40px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.meta-run .alvo{color:var(--sub);font-size:14px}
+.selo{display:inline-block;border-radius:20px;padding:5px 12px;font-weight:700;font-size:14px;margin-top:8px}
+.run-form{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.run-form label{font-size:12px;color:var(--sub);font-weight:600;display:flex;flex-direction:column;gap:4px}
+.run-form input,.run-form select{border:1px solid var(--linha);border-radius:10px;padding:11px 10px;font-size:16px;font-family:inherit;min-width:0;background:#fff;width:100%}
+.run-form .tempo{display:flex;gap:6px;align-items:center}
+.run-form .full{grid-column:1/-1}
+.ritmo-vivo{margin-top:10px;background:var(--fundo);border-radius:10px;padding:10px;font-size:14px;text-align:center}
+.parciais{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;text-align:center}
+.parciais div{background:var(--fundo);border-radius:10px;padding:8px 2px}
+.parciais small{display:block;color:var(--sub);font-size:11px}
+.parciais b{font-size:15px;font-variant-numeric:tabular-nums}
+.run-linha{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--linha);font-size:14px}
+.run-linha:last-child{border:0}
+.run-linha .ponto{flex:0 0 10px;width:10px;height:10px;border-radius:50%;display:block}
+.run-linha .meio{flex:1}
+.run-linha small{color:var(--sub)}
 .resumo3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
 .resumo3 div{background:var(--fundo);border-radius:12px;padding:10px 4px}
 .resumo3 small{display:block;color:var(--sub);font-size:12px}
@@ -136,7 +159,7 @@ h2{font-size:17px;margin:4px 0 10px}
 <nav>
   <button id="nav-semana" onclick="ir('semana')"><span>📅</span>Semana</button>
   <button id="nav-treinos" onclick="ir('treinos')"><span>🏋️</span>Treinos</button>
-  <button id="nav-cardio" onclick="ir('cardio')"><span>🚴</span>Cardio</button>
+  <button id="nav-corrida" onclick="ir('corrida')"><span>🏃‍♀️</span>Corrida</button>
   <button id="nav-historico" onclick="ir('historico')"><span>📊</span>Histórico</button>
   <button id="nav-peso" onclick="ir('peso')"><span>⚖️</span>Peso</button>
 </nav>
@@ -198,7 +221,7 @@ const FOTOS = {
   "Elevação Lateral Inclinado":"One-Arm_Incline_Lateral_Raise","Desenvolvimento com Halter":"Dumbbell_Shoulder_Press",
   "Crucifixo inverso na máquina":"Reverse_Machine_Flyes"
 };
-const VERSAO = "1.4";
+const VERSAO = "1.5";
 const NOMES_DIA = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 const DIA_LONGO = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
 
@@ -230,14 +253,14 @@ function ir(t, arg, empilhar){
   if(empilhar) pilha.push([atual, telaArg]);
   else pilha = [];
   atual = t; telaArg = arg;
-  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("ativo", b.id==="nav-"+t || (t==="treino" && b.id==="nav-treinos")));
-  ({semana:telaSemana, treinos:telaTreinos, treino:telaTreino, cardio:telaCardio, historico:telaHistorico, peso:telaPeso})[t](arg);
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("ativo", b.id==="nav-"+t || (t==="treino" && b.id==="nav-treinos") || (t==="cardio" && b.id==="nav-corrida")));
+  ({semana:telaSemana, treinos:telaTreinos, treino:telaTreino, cardio:telaCardio, corrida:telaCorrida, historico:telaHistorico, peso:telaPeso})[t](arg);
   window.scrollTo(0,0);
 }
 let telaArg;
 window.voltar = function(){
   const z=document.getElementById("zoom");if(z.classList.contains("on")){z.classList.remove("on");return true}
-  if(pilha.length){const [t,a]=pilha.pop();atual=t;telaArg=a;({semana:telaSemana,treinos:telaTreinos,treino:telaTreino,cardio:telaCardio,historico:telaHistorico, peso:telaPeso})[t](a);return true}
+  if(pilha.length){const [t,a]=pilha.pop();atual=t;telaArg=a;({semana:telaSemana,treinos:telaTreinos,treino:telaTreino,cardio:telaCardio,corrida:telaCorrida,historico:telaHistorico, peso:telaPeso})[t](a);return true}
   if(atual!=="semana"){ir("semana");return true}
   return false;
 };
@@ -259,7 +282,7 @@ function telaSemana(){
     const cls = ["dia"]; if(k===iso(hoje)) cls.push("hoje"); if(f) cls.push("feito");
     html += `<div class="${cls.join(" ")}" onclick="marcarDia('${k}')">
       <div>${NOMES_DIA[w]}</div><div class="n">${d.getDate()}</div>
-      <div class="t" style="${f?"":pl?`color:${cor(pl)}`:""}">${f?"✓ "+f:(pl||"·")}</div></div>`;
+      <div class="t" style="${f?"":pl?`color:${cor(pl)}`:""}">${f?"✓ "+f:(pl||"·")}</div>${corridas.some(c=>c.d===k)?`<div class="corre">🏃‍♀️</div>`:""}</div>`;
   }
   const pct = Math.min(100, Math.round(feitosSemana/meta()*100));
   const tHoje = treinoDoDia(hoje), feitoHoje = feitos[iso(hoje)];
@@ -294,6 +317,7 @@ function telaSemana(){
     ${feitoHoje?"":`<div class="trocar"><small>Quer fazer outro treino hoje? Toque para trocar${(tHoje||"")!==planoHoje?` · <a href="#" onclick="escolherTreinoHoje('${planoHoje}');return false">voltar ao plano</a>`:""}</small><div class="seg">${opcoes}</div></div>`}
   </div>`:""}
   ${desloc===0&&pesagemPendente()?`<div class="lembrete" onclick="ir('peso')">⚖️ <b>Hora de se pesar!</b> ${pesos.length?"Já faz "+diasDesde(pesos[pesos.length-1].d)+" dias da última pesagem.":"Registre seu primeiro peso."} Toque aqui.</div>`:""}
+  ${desloc===0&&hojeD()<=new Date(DESAFIO.ate+"T12:00:00")?`<div class="lembrete" style="background:var(--verdeClaro);color:#17603F" onclick="ir('corrida')">🏃‍♀️ <b>Desafio:</b> ${Math.min(DESAFIO.qtd,new Set(corridas.filter(c=>c.d>=DESAFIO.desde&&c.d<=DESAFIO.ate).map(c=>c.d)).size)} de ${DESAFIO.qtd} corridas até ${fmt(new Date(DESAFIO.ate+"T12:00:00"))}. Toque para registrar.</div>`:""}
   ${desloc===0?`<button class="btn claro" style="margin-top:0" onclick="ir('treinos')">📅 Escolher o treino de cada dia da semana</button>`:""}`;
 }
 function escolherTreinoHoje(l){
@@ -531,7 +555,7 @@ window.aoVoltar = () => rodarTimer();
 
 // ---------- TELA: CARDIO ----------
 function telaCardio(){
-  cab("Cardio","Adaptável à sua disposição");
+  cab("Cardio","Adaptável à sua disposição", true);
   document.getElementById("tela").innerHTML = `
   <div class="card cardio">
     <h2>⚡ Dias com mais disposição</h2>
@@ -558,6 +582,138 @@ function telaCardio(){
     <h2>💙 O mais importante</h2>
     <p>Não é sobre fazer o mais difícil, é sobre fazer o que seu corpo permite naquele dia. <b>Consistência vale mais que intensidade.</b></p>
   </div>`;
+}
+
+// ---------- TELA: CORRIDA ----------
+let corridas = ler("corridas", []);   // [{d:"2026-11-12", km:5, s:2280, onde:"Rua"}]
+const META_KM = 5, META_S = 35*60, META_RITMO = META_S/META_KM;   // 7:00 por km
+const mmss = t => {t=Math.round(t);const h=Math.floor(t/3600),m=Math.floor(t%3600/60),x=t%60;return (h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0")};
+const ritmo = c => c.s / c.km;
+const DESAFIO = {qtd:10, ate:"2026-11-28", desde:"2026-11-01"};   // 10 corridas antes de 29/11
+function cardDesafio(){
+  const feitas = corridas.filter(c=>c.d>=DESAFIO.desde && c.d<=DESAFIO.ate);
+  const dias = new Set(feitas.map(c=>c.d)).size;   // uma corrida por dia conta como 1 treino
+  const n = Math.min(dias, DESAFIO.qtd), falta = DESAFIO.qtd - n;
+  const fim = new Date(DESAFIO.ate+"T12:00:00"), hoje = hojeD();
+  const restam = Math.round((fim - hoje)/864e5) + 1;   // incluindo hoje
+  const corridaHoje = feitas.some(c=>c.d===iso(hoje));
+  const diasLivres = restam - (corridaHoje?1:0);
+  let txt;
+  if(falta<=0) txt = `<span class="selo" style="background:var(--verdeClaro);color:var(--verde)">🏆 Desafio cumprido!</span>`;
+  else if(restam<=0) txt = `<p class="legenda">O prazo terminou com ${n} de ${DESAFIO.qtd}.</p>`;
+  else {
+    const porSem = falta/Math.max(1,diasLivres)*7;
+    txt = `<p class="legenda" style="margin-top:10px">Faltam <b>${falta}</b> corrida${falta>1?"s":""} em <b>${restam}</b> dia${restam>1?"s":""}${diasLivres>0?` · cerca de <b>${Math.ceil(porSem)} por semana</b>`:""}${falta>diasLivres?` · <b style="color:#B5650B">não dá mais tempo de fazer todas 😕</b>`:""}</p>`;
+  }
+  const bolas = Array.from({length:DESAFIO.qtd},(_,i)=>`<div class="bolinha ${i<n?"on":""}">${i<n?"✓":i+1}</div>`).join("");
+  return `<div class="card"><h2>🗓️ Desafio: ${DESAFIO.qtd} corridas até ${fmt(fim)}</h2>
+    <div class="bolinhas">${bolas}</div>${txt}</div>`;
+}
+const kmf = v => v.toLocaleString("pt-BR",{maximumFractionDigits:2});
+function telaCorrida(){
+  cab("Corrida 🏃‍♀️","Meta: 5 km em menos de 35 min (ritmo abaixo de 7:00 por km)");
+  const n = corridas.length;
+  const de5 = corridas.filter(c=>c.km>=META_KM).map(c=>({...c, t5: ritmo(c)*META_KM}));
+  const melhor = de5.length ? de5.reduce((a,b)=>b.t5<a.t5?b:a) : null;
+  const melhorRitmo = n ? corridas.reduce((a,b)=>ritmo(b)<ritmo(a)?b:a) : null;
+  const batida = melhor && melhor.t5 < META_S;
+  const falta = melhor ? melhor.t5 - META_S : null;
+  const ini = inicioSemana(hojeD());
+  const semana = corridas.filter(c=>new Date(c.d+"T12:00:00")>=ini);
+  const kmSemana = semana.reduce((a,c)=>a+c.km,0);
+  let metaCard;
+  if(melhor){
+    metaCard = `<div class="alvo">Seu melhor nos 5 km</div><div class="grande" style="color:${batida?"var(--verde)":"var(--texto)"}">${mmss(melhor.t5)}</div>
+      <div class="alvo">meta: menos de 35:00 · ${fmt(new Date(melhor.d+"T12:00:00"))}</div>
+      ${batida?`<span class="selo" style="background:var(--verdeClaro);color:var(--verde)">🎉 Meta batida!</span>`
+        :`<span class="selo" style="background:#FDF1E2;color:#B5650B">Faltam ${mmss(falta)} para baixar de 35:00</span>`}
+      <div class="progresso" style="margin-top:14px"><div style="width:${Math.max(4,Math.min(100,META_S/melhor.t5*100))}%;${batida?"":"background:var(--laranja)"}"></div></div>`;
+  } else {
+    metaCard = `<div class="alvo">Meta</div><div class="grande">&lt; 35:00</div><div class="alvo">nos 5 km</div>
+      <p class="legenda" style="margin-top:10px">${n?"Quando registrar uma corrida de 5 km ou mais, seu melhor tempo aparece aqui.":"Registre sua primeira corrida aqui embaixo para acompanhar a evolução."}</p>`;
+  }
+  document.getElementById("tela").innerHTML = `
+  <div class="card meta-run">${metaCard}</div>
+  ${cardDesafio()}
+  <div class="card"><h2>Registrar corrida</h2>
+    <div class="run-form">
+      <label>Data<input type="date" id="cData" value="${iso(hojeD())}" max="${iso(hojeD())}"></label>
+      <label>Distância (km)<input type="text" id="cKm" inputmode="decimal" value="5" oninput="ritmoVivo()"></label>
+      <label class="full">Tempo
+        <div class="tempo"><input type="number" id="cMin" inputmode="numeric" placeholder="min" min="0" oninput="ritmoVivo()"><b>:</b><input type="number" id="cSeg" inputmode="numeric" placeholder="seg" min="0" max="59" oninput="ritmoVivo()"></div></label>
+      <label class="full">Onde
+        <select id="cOnde"><option>Rua</option><option>Esteira</option><option>Pista</option></select></label>
+    </div>
+    <div class="ritmo-vivo" id="ritmoVivo">Digite a distância e o tempo para ver seu ritmo</div>
+    <button class="btn verde" onclick="salvarCorrida()">Salvar corrida</button>
+  </div>
+  ${n?`<div class="card"><h2>Resumo</h2><div class="resumo3">
+      <div><small>Corridas</small><b>${n}</b><small>no total</small></div>
+      <div><small>Esta semana</small><b>${kmf(kmSemana)} km</b><small>${semana.length} corrida${semana.length===1?"":"s"}</small></div>
+      <div><small>Melhor ritmo</small><b style="color:${ritmo(melhorRitmo)<META_RITMO?"var(--verde)":"var(--texto)"}">${mmss(ritmo(melhorRitmo))}</b><small>por km</small></div>
+    </div></div>`:""}
+  ${n>1?`<div class="card grafico"><h2>Evolução do ritmo</h2><p class="legenda" style="margin:-4px 0 8px">Minutos por km. Abaixo da linha verde = ritmo da meta.</p>${graficoCorrida()}</div>`:""}
+  <div class="card"><h2>🎯 Como fica a meta, km a km</h2>
+    <p class="legenda" style="margin:-4px 0 10px">Para fechar em 35:00, cada km precisa sair em até 7:00. Olhe o relógio ao passar por cada marca:</p>
+    <div class="parciais">${[1,2,3,4,5].map(k=>`<div><small>km ${k}</small><b>${mmss(k*META_RITMO)}</b></div>`).join("")}</div>
+  </div>
+  ${n?`<div class="card"><h2>Minhas corridas</h2>${corridas.map((c,i)=>({c,i})).reverse().map(({c,i})=>{
+      const ok = ritmo(c) < META_RITMO, d = new Date(c.d+"T12:00:00");
+      return `<div class="run-linha"><span class="ponto" style="background:${ok?"var(--verde)":"var(--laranja)"}"></span>
+        <div class="meio"><b>${kmf(c.km)} km em ${mmss(c.s)}</b><br><small>${NOMES_DIA[d.getDay()]}, ${d.toLocaleDateString("pt-BR")} · ${c.onde||"Rua"}</small></div>
+        <div style="text-align:right"><b style="color:${ok?"var(--verde)":"var(--texto)"}">${mmss(ritmo(c))}</b><br><small>/km</small></div>
+        <button class="del" onclick="apagarCorrida(${i})">×</button></div>`}).join("")}
+    <p class="legenda" style="margin-top:8px"><span style="color:var(--verde)">●</span> no ritmo da meta · <span style="color:var(--laranja)">●</span> acima de 7:00/km</p></div>`:""}
+  <button class="btn claro" onclick="ir('cardio',null,true)">🚴 Ver guia de cardio da Geovana</button>`;
+}
+function lerTempo(){
+  const m = parseInt(document.getElementById("cMin").value||"0",10), x = parseInt(document.getElementById("cSeg").value||"0",10);
+  return (isNaN(m)?0:m)*60 + (isNaN(x)?0:x);
+}
+const lerKm = () => parseFloat(String(document.getElementById("cKm").value).replace(",","."));
+function ritmoVivo(){
+  const km = lerKm(), s = lerTempo(), el = document.getElementById("ritmoVivo");
+  if(!(km>0) || !s){el.innerHTML="Digite a distância e o tempo para ver seu ritmo";return}
+  const r = s/km, ok = r < META_RITMO;
+  el.innerHTML = `Ritmo: <b style="color:${ok?"var(--verde)":"#B5650B"}">${mmss(r)} por km</b> · nos 5 km daria <b>${mmss(r*5)}</b> ${ok?"✅":""}`;
+}
+function salvarCorrida(){
+  const d = document.getElementById("cData").value, km = lerKm(), s = lerTempo(), onde = document.getElementById("cOnde").value;
+  if(!d){alert("Escolha a data.");return}
+  if(!(km>0 && km<=60)){alert("Digite a distância em km, por exemplo 5 ou 3,5");return}
+  if(!s){alert("Digite o tempo da corrida (minutos e segundos).");return}
+  if(parseInt(document.getElementById("cSeg").value||"0",10)>59){alert("Os segundos vão de 0 a 59.");return}
+  const r = s/km;
+  if(r<150 || r>1200){if(!confirm(`O ritmo ficou ${mmss(r)} por km. Está certo?`))return}
+  corridas.push({d, km:Math.round(km*100)/100, s, onde});
+  corridas.sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:0); gravar("corridas",corridas);
+  const ok = r < META_RITMO, de5 = km>=META_KM && r*META_KM < META_S;
+  telaCorrida();
+  setTimeout(()=>alert(de5?"🎉 5 km em menos de 35 minutos! META BATIDA!":ok?"Corrida salva! Ritmo da meta 💪":"Corrida salva! Cada corrida conta 💪"),100);
+}
+function apagarCorrida(i){
+  const c = corridas[i];
+  if(confirm(`Apagar a corrida de ${kmf(c.km)} km do dia ${new Date(c.d+"T12:00:00").toLocaleDateString("pt-BR")}?`)){corridas.splice(i,1);gravar("corridas",corridas);telaCorrida()}
+}
+function graficoCorrida(){
+  const W=340, H=200, pl=40, pr=12, pt=22, pb=28;
+  const rs = corridas.map(ritmo), N = rs.length;
+  let mn = Math.min(...rs, META_RITMO), mx = Math.max(...rs, META_RITMO); const fol = Math.max(15,(mx-mn)*.2); mn-=fol; mx+=fol;
+  const X = i => pl + (N===1?0.5:i/(N-1))*(W-pl-pr), Y = r => pt + (r-mn)/(mx-mn)*(H-pt-pb);
+  const pts = rs.map((r,i)=>[X(i),Y(r)]);
+  const linha = pts.map((q,i)=>(i?"L":"M")+q[0].toFixed(1)+" "+q[1].toFixed(1)).join(" ");
+  let grade = "";
+  for(let g=0;g<=3;g++){const r=mn+(mx-mn)*g/3, y=Y(r);
+    grade += `<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="#E3E8F1"/><text x="${pl-6}" y="${y+4}" font-size="10" fill="#5B6678" text-anchor="end">${mmss(r)}</text>`;}
+  const ym = Y(META_RITMO);
+  const metaL = `<line x1="${pl}" x2="${W-pr}" y1="${ym}" y2="${ym}" stroke="#1F9D62" stroke-width="2" stroke-dasharray="5 4"/><text x="${W-pr}" y="${ym-5}" font-size="10" font-weight="700" fill="#1F9D62" text-anchor="end">meta 7:00</text>`;
+  const mostrar = i => N<=7 || i===0 || i===N-1 || i%Math.ceil(N/6)===0;
+  const marcas = pts.map((q,i)=>{const ok=rs[i]<META_RITMO;
+    return `<circle cx="${q[0]}" cy="${q[1]}" r="4.5" fill="#fff" stroke="${ok?"#1F9D62":"#E58A17"}" stroke-width="2.5"/>`+
+    (mostrar(i)?`<text x="${q[0]}" y="${q[1]-9}" font-size="10.5" font-weight="700" fill="#1B2333" text-anchor="middle">${mmss(rs[i])}</text>
+    <text x="${q[0]}" y="${H-10}" font-size="10" fill="#5B6678" text-anchor="middle">${fmt(new Date(corridas[i].d+"T12:00:00"))}</text>`:"")}).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Gráfico do ritmo das corridas">${grade}${metaL}
+    <path d="${linha}" fill="none" stroke="#1E4FA3" stroke-width="2.5" stroke-linejoin="round"/>${marcas}</svg>`;
 }
 
 // ---------- TELA: PESO ----------
