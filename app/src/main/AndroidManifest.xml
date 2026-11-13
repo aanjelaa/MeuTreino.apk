@@ -6,6 +6,7 @@
     <!-- Aviso do descanso no segundo exato (app de uso pessoal) -->
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <!-- Leitura das corridas do relógio (Polar Flow → Health Connect) -->
     <uses-permission android:name="android.permission.health.READ_EXERCISE" />
     <uses-permission android:name="android.permission.health.READ_DISTANCE" />
@@ -36,5 +37,11 @@
             </intent-filter>
         </activity-alias>
         <receiver android:name=".Descanso" android:exported="false" />
+        <receiver android:name=".Lembretes" android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

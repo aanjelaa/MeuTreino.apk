@@ -18,7 +18,7 @@ header p{margin:4px 0 0;opacity:.85;font-size:14px}
 main{padding:14px 14px 90px}
 body.comTimer main{padding-bottom:200px}
 nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--linha);display:flex}
-nav button{flex:1;border:0;background:none;padding:10px 0 12px;font-size:12px;color:var(--sub);font-weight:600}
+nav button{flex:1;border:0;background:none;padding:10px 0 12px;font-size:11.5px;min-width:0;color:var(--sub);font-weight:600}
 nav button span{display:block;font-size:20px;margin-bottom:2px}
 nav button.ativo{color:var(--azul)}
 .card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(20,40,80,.08)}
@@ -119,6 +119,59 @@ h2{font-size:17px;margin:4px 0 10px}
 .bolinhas{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .bolinha{aspect-ratio:1;border-radius:50%;background:var(--fundo);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--sub);font-size:15px;max-width:52px;margin:0 auto;width:100%}
 .bolinha.on{background:var(--verde);color:#fff}
+.bolinhas.b7{grid-template-columns:repeat(7,1fr);gap:6px}
+.bolinhas.b7 .bolinha{font-size:13px}
+.bolinha.teste{border:2px dashed #E58A17;color:#B5650B}
+.bolinha.teste.on{border-style:solid;background:#E58A17;color:#fff}
+.barra5k{display:flex;gap:2px;height:10px;border-radius:6px;overflow:hidden;margin:8px 0 2px;position:relative}
+.barra5k i{display:block;height:100%}
+.barra5k i.tr,.leg5k i.tr{background:#E58A17}
+.barra5k i.cm,.leg5k i.cm{background:#8FB4EE}
+.barra5k.grande5k{height:22px;border-radius:8px;overflow:visible}
+.barra5k.grande5k i:first-child{border-radius:8px 0 0 8px}.barra5k.grande5k i:last-of-type{border-radius:0 8px 8px 0}
+.barra5k b{position:absolute;top:-5px;bottom:-5px;width:4px;margin-left:-2px;background:var(--texto);border-radius:2px;left:0;transition:left .25s linear}
+.leg5k{display:flex;gap:14px;font-size:12px;color:var(--sub);margin-top:4px}
+.leg5k i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.sem5k{font-size:13px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.03em;margin:14px 0 4px}
+.sem5k:first-child{margin-top:0}
+.p5{display:flex;align-items:center;gap:12px;padding:10px;border-radius:12px;margin:0 -10px}
+.p5+.p5{border-top:1px solid var(--linha);border-radius:0}
+.p5 .num{width:34px;height:34px;border-radius:50%;background:var(--fundo);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0}
+.p5 .info{flex:1;min-width:0}
+.p5 .info small{color:var(--sub)}
+.p5.ok .num{background:var(--verde);color:#fff}
+.p5.hoje{background:#EAF1FD;border-radius:12px}
+.p5.destaque .num{background:#FDF1E2;color:#B5650B}
+.p5.destaque.ok .num{background:#E58A17;color:#fff}
+.p5.cam .num{background:var(--fundo);font-size:17px}
+.res5k{font-size:13px;color:var(--verde);font-weight:700;margin-top:3px}
+.play{border:0;background:var(--azul);color:#fff;width:42px;height:42px;border-radius:50%;font-size:16px;flex-shrink:0}
+.dia29{background:linear-gradient(135deg,#FFF6E6,#FDE6C8)}
+.l5{display:flex;align-items:center;gap:12px}
+.l5 input[type=time],.l5 input[type=date]{border:1px solid var(--linha);border-radius:10px;padding:9px;font-size:16px;font-family:inherit;background:#fff}
+.sw{position:relative;width:50px;height:30px;flex-shrink:0}
+.sw input{opacity:0;width:0;height:0}
+.sw span{position:absolute;inset:0;background:#C9D1DE;border-radius:20px;transition:.2s}
+.sw span:before{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw input:checked+span{background:var(--verde)}
+.sw input:checked+span:before{transform:translateX(20px)}
+.obs5k{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--sub);font-weight:600;margin-top:10px}
+.obs5k textarea{border:1px solid var(--linha);border-radius:10px;padding:10px;font-size:15px;font-family:inherit;resize:vertical}
+.chips5k{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chips5k button{border:1px solid var(--linha);background:#fff;border-radius:20px;padding:6px 10px;font-size:13px;font-family:inherit;color:var(--texto)}
+.sug5k{background:#EAF1FD;border-radius:12px;padding:10px;margin-bottom:10px;display:flex;flex-direction:column;gap:6px}
+.sug5k small{color:var(--azul);font-weight:700}
+.sug5k button{border:0;background:#fff;color:var(--azul);border-radius:10px;padding:10px;font-weight:700;font-size:14px;font-family:inherit;text-align:left}
+.int5k{border-radius:18px;padding:26px 16px;text-align:center;color:#fff;margin-bottom:12px;background:var(--sub);transition:background .3s}
+.int5k.tr{background:linear-gradient(160deg,#F09A2B,#D4730A)}
+.int5k.cm{background:linear-gradient(160deg,#4A86E0,#1E4FA3)}
+.int5k.fim{background:linear-gradient(160deg,#2BB673,#1F9D62)}
+.int5k.pausado{filter:grayscale(.7)}
+.int5k .fase{font-size:26px;font-weight:800;letter-spacing:.02em}
+.int5k .relogio{font-size:76px;font-weight:800;line-height:1.05;font-variant-numeric:tabular-nums;margin:6px 0}
+.int5k .sub{font-size:15px;opacity:.92}
+.int5k .prox{font-size:15px;font-weight:700;margin-top:10px;background:rgba(255,255,255,.18);display:inline-block;padding:6px 12px;border-radius:20px}
+.int5k .prox:empty{display:none}
 .corre{font-size:13px;line-height:1;margin-top:2px}
 .meta-run{text-align:center}
 .meta-run .grande{font-size:40px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
@@ -160,6 +213,7 @@ h2{font-size:17px;margin:4px 0 10px}
   <button id="nav-semana" onclick="ir('semana')"><span>📅</span>Semana</button>
   <button id="nav-treinos" onclick="ir('treinos')"><span>🏋️</span>Treinos</button>
   <button id="nav-corrida" onclick="ir('corrida')"><span>🏃‍♀️</span>Corrida</button>
+  <button id="nav-desafio5k" onclick="ir('desafio5k')"><span>🏁</span>5 km</button>
   <button id="nav-historico" onclick="ir('historico')"><span>📊</span>Histórico</button>
   <button id="nav-peso" onclick="ir('peso')"><span>⚖️</span>Peso</button>
 </nav>
@@ -221,7 +275,7 @@ const FOTOS = {
   "Elevação Lateral Inclinado":"One-Arm_Incline_Lateral_Raise","Desenvolvimento com Halter":"Dumbbell_Shoulder_Press",
   "Crucifixo inverso na máquina":"Reverse_Machine_Flyes"
 };
-const VERSAO = "1.6";
+const VERSAO = "1.7";
 const NOMES_DIA = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 const DIA_LONGO = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
 
@@ -253,14 +307,14 @@ function ir(t, arg, empilhar){
   if(empilhar) pilha.push([atual, telaArg]);
   else pilha = [];
   atual = t; telaArg = arg;
-  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("ativo", b.id==="nav-"+t || (t==="treino" && b.id==="nav-treinos") || (t==="cardio" && b.id==="nav-corrida")));
-  ({semana:telaSemana, treinos:telaTreinos, treino:telaTreino, cardio:telaCardio, corrida:telaCorrida, historico:telaHistorico, peso:telaPeso})[t](arg);
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("ativo", b.id==="nav-"+t || (t==="treino" && b.id==="nav-treinos") || (t==="cardio" && b.id==="nav-corrida") || ((t==="reg5k"||t==="int5k") && b.id==="nav-desafio5k")));
+  ({semana:telaSemana, treinos:telaTreinos, treino:telaTreino, cardio:telaCardio, corrida:telaCorrida, desafio5k:telaDesafio5k, reg5k:telaReg5k, int5k:telaInt5k, historico:telaHistorico, peso:telaPeso})[t](arg);
   window.scrollTo(0,0);
 }
 let telaArg;
 window.voltar = function(){
   const z=document.getElementById("zoom");if(z.classList.contains("on")){z.classList.remove("on");return true}
-  if(pilha.length){const [t,a]=pilha.pop();atual=t;telaArg=a;({semana:telaSemana,treinos:telaTreinos,treino:telaTreino,cardio:telaCardio,corrida:telaCorrida,historico:telaHistorico, peso:telaPeso})[t](a);return true}
+  if(pilha.length){const [t,a]=pilha.pop();atual=t;telaArg=a;({semana:telaSemana,treinos:telaTreinos,treino:telaTreino,cardio:telaCardio,corrida:telaCorrida,desafio5k:telaDesafio5k,reg5k:telaReg5k,int5k:telaInt5k,historico:telaHistorico, peso:telaPeso})[t](a);return true}
   if(atual!=="semana"){ir("semana");return true}
   return false;
 };
@@ -317,6 +371,7 @@ function telaSemana(){
     ${feitoHoje?"":`<div class="trocar"><small>Quer fazer outro treino hoje? Toque para trocar${(tHoje||"")!==planoHoje?` · <a href="#" onclick="escolherTreinoHoje('${planoHoje}');return false">voltar ao plano</a>`:""}</small><div class="seg">${opcoes}</div></div>`}
   </div>`:""}
   ${desloc===0&&pesagemPendente()?`<div class="lembrete" onclick="ir('peso')">⚖️ <b>Hora de se pesar!</b> ${pesos.length?"Já faz "+diasDesde(pesos[pesos.length-1].d)+" dias da última pesagem.":"Registre seu primeiro peso."} Toque aqui.</div>`:""}
+  ${desloc===0?cardSemana5k():""}
   ${desloc===0&&hojeD()<=new Date(DESAFIO.ate+"T12:00:00")?`<div class="lembrete" style="background:var(--verdeClaro);color:#17603F" onclick="ir('corrida')">🏃‍♀️ <b>Desafio:</b> ${Math.min(DESAFIO.qtd,new Set(corridas.filter(c=>c.d>=DESAFIO.desde&&c.d<=DESAFIO.ate).map(c=>c.d)).size)} de ${DESAFIO.qtd} corridas até ${fmt(new Date(DESAFIO.ate+"T12:00:00"))}. Toque para registrar.</div>`:""}
   ${desloc===0?`<button class="btn claro" style="margin-top:0" onclick="ir('treinos')">📅 Escolher o treino de cada dia da semana</button>`:""}`;
 }
@@ -551,7 +606,7 @@ function bip(){
     });
   }catch(e){}
 }
-window.aoVoltar = () => rodarTimer();
+window.aoVoltar = () => { rodarTimer(); if(atual==="int5k") telaInt5k(telaArg); else if(atual==="desafio5k") telaDesafio5k(); };
 
 // ---------- TELA: CARDIO ----------
 function telaCardio(){
@@ -697,13 +752,15 @@ window.recebeHC = function(r){
     novas++;
   }
   corridas.sort((a,b)=>a.d<b.d?-1:a.d>b.d?1:0); gravar("corridas",corridas);
+  const lig5k = vincular5k();
   const agora = new Date(); gravar("hcUltima", fmt(agora)+" às "+String(agora.getHours()).padStart(2,"0")+":"+String(agora.getMinutes()).padStart(2,"0"));
-  if(atual==="corrida") telaCorrida(); else if(atual==="semana") telaSemana();
-  if(hcSilencioso && !novas) return;
+  if(atual==="corrida") telaCorrida(); else if(atual==="semana") telaSemana(); else if(atual==="desafio5k") telaDesafio5k();
+  if(hcSilencioso && !novas && !lig5k) return;
   let msg = novas ? `⌚ ${novas} corrida${novas>1?"s":""} importada${novas>1?"s":""} do relógio!` : "Nenhuma corrida nova no relógio.";
   if(jaTinha) msg += `\n${jaTinha} que você tinha digitado foi${jaTinha>1?"ram":""} trocada${jaTinha>1?"s":""} pela versão do relógio.`;
   if(semDist) msg += `\n${semDist} sem distância foi${semDist>1?"ram":""} ignorada${semDist>1?"s":""}.`;
   if(!r.corridas.length && r.outros) msg += `\nAchei ${r.outros} treino${r.outros>1?"s":""} de outro tipo (não corrida). Confira se no relógio o esporte está como "Corrida".`;
+  if(lig5k) msg += `\n🏁 ${lig5k} entr${lig5k>1?"aram":"ou"} no Desafio 5 km como treino feito.`;
   alert(msg);
 };
 function lerTempo(){
@@ -756,6 +813,374 @@ function graficoCorrida(){
     <path d="${linha}" fill="none" stroke="#1E4FA3" stroke-width="2.5" stroke-linejoin="round"/>${marcas}</svg>`;
 }
 
+// ---------- CORRIDA – DESAFIO 5 KM (12 a 29/11/2026, meta 5 km em 40 min) ----------
+const D5 = {
+  meta: 40*60, data: "2026-11-29",
+  treinos: [
+    {id:1, sem:1, ini:"2026-11-12", fim:"2026-11-15", padrao:"2026-11-13", tipo:"int", min:30, trote:1, cam:2},
+    {id:2, sem:1, ini:"2026-11-12", fim:"2026-11-15", padrao:"2026-11-15", tipo:"int", min:30, trote:1, cam:2},
+    {id:3, sem:2, ini:"2026-11-16", fim:"2026-11-22", padrao:"2026-11-17", tipo:"int", min:35, trote:2, cam:1},
+    {id:4, sem:2, ini:"2026-11-16", fim:"2026-11-22", padrao:"2026-11-19", tipo:"int", min:35, trote:2, cam:1},
+    {id:5, sem:2, ini:"2026-11-21", fim:"2026-11-22", padrao:"2026-11-22", tipo:"teste"},
+    {id:6, sem:3, ini:"2026-11-23", fim:"2026-11-25", padrao:"2026-11-23", tipo:"int", min:30, trote:3, cam:1},
+    {id:7, sem:3, ini:"2026-11-23", fim:"2026-11-25", padrao:"2026-11-25", tipo:"int", min:30, trote:3, cam:1}
+  ],
+  semanas: {1:"Semana 1 · 12 a 15/11", 2:"Semana 2 · 16 a 22/11", 3:"Semana 3 · 23 a 28/11"},
+  caminhada: ["2026-11-26","2026-11-27","2026-11-28"]
+};
+const ID_DESAFIO = 8;
+const DESAFIO_T = {id:ID_DESAFIO, tipo:"desafio", ini:"2026-11-29", fim:"2026-11-29", padrao:"2026-11-29"};
+let reg5k = ler("reg5k", {});        // {1:{d:"2026-11-13", km:3.1, s:1800, obs:"", hc:"id"}}
+let datas5k = ler("datas5k", {});    // dia escolhido de cada treino: {1:"2026-11-14"}
+let cfg5k = ler("cfg5k", {on:true, hora:"07:00"});
+let pre5k = null;                    // tempo vindo do cronômetro para preencher o registro
+const d12 = k => new Date(k+"T12:00:00");
+const dmes = k => NOMES_DIA[d12(k).getDay()]+" "+fmt(d12(k));
+const t5k = id => id==ID_DESAFIO ? DESAFIO_T : D5.treinos.find(t=>t.id==id);
+const dia5k = t => datas5k[t.id] || t.padrao;
+const nome5k = t => t.tipo==="teste" ? "Teste de 5 km" : t.tipo==="desafio" ? "Desafio 5 km" : "Treino "+t.id;
+const descr5k = t => t.tipo==="teste" ? "5 km completos — anote o tempo" : t.tipo==="desafio" ? "5 km — leve nos 3 primeiros km, acelere só nos 2 últimos" : `${t.min} min — ${t.trote} min trote / ${t.cam} min caminhada`;
+const durTxt = s => s%60 ? mmss(s) : (s/60)+" min";
+function segmentos(t){
+  const segs=[]; let rest=t.min*60, trote=true;
+  while(rest>0){ const dur=Math.min(rest,(trote?t.trote:t.cam)*60); segs.push({tipo:trote?"trote":"caminhada", dur}); rest-=dur; trote=!trote; }
+  return segs;
+}
+const feitos5k = () => D5.treinos.filter(t=>reg5k[t.id]).length;
+const diasPara29 = () => Math.round((d12(D5.data)-hojeD())/864e5);
+function barra5k(t){
+  if(t.tipo!=="int") return "";
+  return `<div class="barra5k">${segmentos(t).map(s=>`<i class="${s.tipo==="trote"?"tr":"cm"}" style="flex:${s.dur}"></i>`).join("")}</div>`;
+}
+const legenda5k = `<div class="leg5k"><span><i class="tr"></i>trote</span><span><i class="cm"></i>caminhada</span></div>`;
+
+// ----- lembretes (notificações do Android) -----
+function agendar5k(){
+  if(!(window.Android && Android.agendarLembretes)) return;
+  const L = [];
+  if(cfg5k.on){
+    const [h,m] = (cfg5k.hora||"07:00").split(":").map(Number);
+    const em = k => { const d=new Date(k+"T00:00:00"); d.setHours(h||0, m||0, 0, 0); return d.getTime(); };
+    D5.treinos.forEach(t=>{ if(!reg5k[t.id]) L.push(t.tipo==="teste"
+      ? {quando:em(dia5k(t)), titulo:"🏁 Hoje: teste de 5 km!", texto:"Hoje: 5 km completos, no seu ritmo. Anote o tempo no app!"}
+      : {quando:em(dia5k(t)), titulo:`🏃‍♀️ Corrida hoje · Treino ${t.id} de 7`, texto:`Hoje: ${t.min} min — ${t.trote} min trote / ${t.cam} min caminhada. Abra o app para usar o cronômetro de intervalos.`}) });
+    D5.caminhada.forEach(k=>L.push({quando:em(k), titulo:"🚶‍♀️ Hoje: só caminhada leve", texto:"Descanso ativo antes do desafio. Nada de correr hoje!"}));
+    if(!reg5k[ID_DESAFIO]) L.push({quando:em(D5.data), titulo:"🏁 HOJE É O DESAFIO DOS 5 KM!", texto:"Comece leve nos 3 primeiros km e acelere só nos 2 últimos. Meta: 40 minutos. Você consegue! 💪"});
+  }
+  L.sort((a,b)=>a.quando-b.quando);
+  try{ Android.agendarLembretes(JSON.stringify(L)) }catch(e){}
+}
+function salvarCfg5k(){
+  cfg5k = {on: $("l5on").checked, hora: $("l5hora").value || "07:00"};
+  gravar("cfg5k", cfg5k); agendar5k();
+  $("l5txt").textContent = cfg5k.on ? `Ligados · aviso às ${cfg5k.hora} nos dias de treino` : "Desligados";
+}
+
+// ----- liga corridas do Polar (Health Connect) aos treinos do plano -----
+function vincular5k(){
+  const usados = new Set(Object.values(reg5k).map(r=>r.hc).filter(Boolean)); let n=0;
+  corridas.filter(c=>c.hc && !usados.has(c.hc) && c.d>="2026-11-12" && c.d<=D5.data).forEach(c=>{
+    let t = null;
+    if(c.d===D5.data){ if(!reg5k[ID_DESAFIO]) t = DESAFIO_T; }
+    else {
+      const cands = D5.treinos.filter(x=>!reg5k[x.id] && c.d>=x.ini && c.d<=x.fim);
+      const serve = x => x.tipo==="teste" ? c.km>=4.5 : true;
+      t = cands.find(x=>dia5k(x)===c.d && serve(x)) || cands.find(x=>x.tipo==="teste" && c.km>=4.5) || cands.find(x=>x.tipo!=="teste");
+    }
+    if(t){ reg5k[t.id] = {d:c.d, km:c.km, s:c.s, obs:"", hc:c.hc}; usados.add(c.hc); n++; }
+  });
+  if(n){ gravar("reg5k", reg5k); agendar5k(); }
+  return n;
+}
+
+// ----- tela principal da seção -----
+function telaDesafio5k(){
+  cab("Corrida – Desafio 5 km", "Meta: 5 km em 40 min · domingo, 29/11");
+  const n = feitos5k(), faltam = diasPara29(), hoje = iso(hojeD());
+  const pend = D5.treinos.filter(t=>!reg5k[t.id]).sort((a,b)=>dia5k(a)<dia5k(b)?-1:dia5k(a)>dia5k(b)?1:a.id-b.id);
+  const hojeT = pend.find(t=>dia5k(t)===hoje), prox = hojeT || pend.find(t=>dia5k(t)>=hoje) || pend[0];
+  const st = ler("int5k", null), rodando = st && !st.fim;
+
+  const chip = faltam>1 ? `Faltam <b>${faltam} dias</b> para 29/11` : faltam===1 ? `<b>Amanhã</b> é o desafio!` : faltam===0 ? `<b>Hoje é o desafio!</b> 🏁` : `Desafio encerrado`;
+  const bolas = D5.treinos.map(t=>`<div class="bolinha ${reg5k[t.id]?"on":""} ${t.tipo==="teste"?"teste":""}">${reg5k[t.id]?"✓":t.tipo==="teste"?"5k":t.id}</div>`).join("");
+
+  let hojeCard = "";
+  if(faltam===0){
+    const r = reg5k[ID_DESAFIO];
+    hojeCard = `<div class="card dia29"><h2>🏁 Hoje é o desafio!</h2>
+      <p>5 km com meta de <b>40 minutos</b> (8:00 por km).</p>
+      <div class="passos"><div class="passo"><b>km 1–3</b>Leve, segurando o ritmo</div><div class="passo" style="background:#FDF1E2"><b>km 4–5</b>Agora sim, acelere!</div></div>
+      ${r?`<button class="btn verde" onclick="ir('reg5k',${ID_DESAFIO},true)">✓ ${r.s?mmss(r.s):"Feito"} — ver registro</button>`:`<button class="btn verde" onclick="ir('reg5k',${ID_DESAFIO},true)">Registrar meu tempo</button>`}</div>`;
+  } else if(faltam<0){
+    hojeCard = "";
+  } else if(D5.caminhada.includes(hoje) && !hojeT){
+    hojeCard = `<div class="card"><h2>🚶‍♀️ Hoje: só caminhada leve</h2><p class="legenda">De 26 a 28/11 nada de correr: o corpo descansa para chegar inteiro no domingo.</p></div>`;
+  } else if(prox){
+    hojeCard = `<div class="card"><h2>${hojeT?"Hoje":"Próximo treino"} · ${nome5k(prox)}</h2>
+      <p class="legenda" style="margin:-4px 0 8px">${hojeT?"":dmes(dia5k(prox))+" · "}${descr5k(prox)}</p>
+      ${barra5k(prox)}${prox.tipo==="int"?legenda5k:""}
+      ${prox.tipo==="int"?`<button class="btn" onclick="iniciarInt(${prox.id})">▶ Iniciar cronômetro de intervalos</button>`:`<p class="legenda" style="margin-top:8px">Use o relógio Polar para marcar o tempo e depois registre aqui.</p>`}
+      <button class="btn claro" onclick="ir('reg5k',${prox.id},true)">✓ Marcar como feito</button></div>`;
+  } else {
+    hojeCard = `<div class="card"><h2>🎉 Os 7 treinos estão feitos!</h2><p class="legenda">Agora é descansar e caminhar leve até o desafio do dia 29.</p></div>`;
+  }
+
+  let plano = "";
+  [1,2,3].forEach(s=>{
+    plano += `<div class="sem5k">${D5.semanas[s]}</div>`;
+    D5.treinos.filter(t=>t.sem===s).forEach(t=>{ plano += linha5k(t, hoje); });
+    if(s===3) plano += `<div class="p5 cam"><div class="num">🚶‍♀️</div><div class="info"><b>26 a 28/11</b><br><small>Só caminhada leve — sem corrida</small></div></div>`;
+  });
+  plano += `<div class="sem5k">Domingo · 29/11</div>${linha5k(DESAFIO_T, hoje)}`;
+
+  const temReg = Object.keys(reg5k).some(k=>reg5k[k].km && reg5k[k].s);
+  const naoApp = !(window.Android && Android.agendarLembretes);
+  document.getElementById("tela").innerHTML = `
+  ${rodando?`<div class="lembrete" style="background:#FDF1E2" onclick="ir('int5k',${st.id},true)">⏱ <b>Cronômetro rodando</b> · ${nome5k(t5k(st.id))}. Toque para voltar.</div>`:""}
+  <div class="card meta-run">
+    <div class="grande">${n} <span style="font-size:22px;color:var(--sub)">de 7</span></div>
+    <div class="alvo">treinos feitos</div>
+    <div class="bolinhas b7" style="margin-top:12px">${bolas}</div>
+    <span class="selo" style="background:#EAF1FD;color:var(--azul)">${chip}</span>
+  </div>
+  ${hojeCard}
+  <div class="card"><h2>📋 Plano até o desafio</h2>${plano}</div>
+  ${temReg?`<div class="card grafico"><h2>📈 Evolução</h2><p class="legenda" style="margin:-4px 0 8px">Ritmo de cada treino (min/km). ⭐ = teste e desafio. Linha verde = ritmo da meta (8:00/km).</p>${grafico5k()}</div>`:""}
+  ${temHC()?`<div class="card"><h2>⌚ Polar</h2><p class="legenda" style="margin:-4px 0 0">As corridas do relógio entram sozinhas no treino do dia quando você abre o app.${ler("hcUltima","")?" Última busca: "+ler("hcUltima",""):""}</p>
+    <button class="btn claro" id="btnHC" onclick="importarHC(false)">⌚ Buscar corridas do Polar agora</button></div>`:""}
+  <div class="card"><h2>🔔 Lembretes</h2>
+    <div class="l5"><div style="flex:1"><b>Avisar nos dias de treino</b><br><small id="l5txt" style="color:var(--sub)">${cfg5k.on?`Ligados · aviso às ${cfg5k.hora} nos dias de treino`:"Desligados"}</small></div>
+      <label class="sw"><input type="checkbox" id="l5on" ${cfg5k.on?"checked":""} onchange="salvarCfg5k()"><span></span></label></div>
+    <div class="l5" style="margin-top:10px"><div style="flex:1">Horário do aviso</div><input type="time" id="l5hora" value="${cfg5k.hora}" onchange="salvarCfg5k()"></div>
+    <p class="legenda" style="margin-top:8px">O aviso mostra o treino do dia (ex.: "Hoje: 30 min — 1 min trote / 2 min caminhada"). Em 29/11 vem o lembrete especial do desafio.${naoApp?" <b>Funciona no app do celular.</b>":""}</p>
+  </div>`;
+}
+function linha5k(t, hoje){
+  const r = reg5k[t.id], d = dia5k(t), ehHoje = d===hoje && !r;
+  const res = r ? `<div class="res5k">✓ ${dmes(r.d)}${r.km?` · ${kmf(r.km)} km`:""}${r.s?` · ${mmss(r.s)}`:""}${r.km&&r.s?` · ${mmss(r.s/r.km)}/km`:""}${r.hc?" · ⌚":""}</div>` : "";
+  return `<div class="p5 ${r?"ok":""} ${ehHoje?"hoje":""} ${t.tipo!=="int"?"destaque":""}" onclick="ir('reg5k',${t.id},true)">
+    <div class="num">${r?"✓":t.tipo==="int"?t.id:t.tipo==="teste"?"5k":"🏁"}</div>
+    <div class="info"><b>${nome5k(t)}</b> <small>· ${ehHoje?"<b style='color:var(--azul)'>hoje</b>":dmes(r?r.d:d)}</small><br><small>${descr5k(t)}</small>${r?res:barra5k(t)}</div>
+    ${t.tipo==="int"&&!r?`<button class="play" onclick="event.stopPropagation();iniciarInt(${t.id})" aria-label="Iniciar cronômetro">▶</button>`:`<div style="color:var(--sub);font-size:22px">›</div>`}
+  </div>`;
+}
+function grafico5k(){
+  const lst = [...D5.treinos, DESAFIO_T].filter(t=>reg5k[t.id] && reg5k[t.id].km && reg5k[t.id].s).map(t=>({t, r:reg5k[t.id], rit:reg5k[t.id].s/reg5k[t.id].km}));
+  lst.sort((a,b)=>a.r.d<b.r.d?-1:a.r.d>b.r.d?1:a.t.id-b.t.id);
+  const W=340, H=210, pl=40, pr=26, pt=26, pb=30, N=lst.length, MR=D5.meta/5;
+  const rs = lst.map(x=>x.rit);
+  let mn=Math.min(...rs,MR), mx=Math.max(...rs,MR); const fol=Math.max(15,(mx-mn)*.2); mn-=fol; mx+=fol;
+  const X = i => pl + (N===1?.5:i/(N-1))*(W-pl-pr), Y = r => pt + (r-mn)/(mx-mn)*(H-pt-pb);
+  let g = "";
+  for(let k=0;k<=3;k++){const r=mn+(mx-mn)*k/3,y=Y(r); g+=`<line x1="${pl}" x2="${W-pr}" y1="${y}" y2="${y}" stroke="#E3E8F1"/><text x="${pl-6}" y="${y+4}" font-size="10" fill="#5B6678" text-anchor="end">${mmss(r)}</text>`;}
+  const ym = Y(MR);
+  g += `<line x1="${pl}" x2="${W-pr}" y1="${ym}" y2="${ym}" stroke="#1F9D62" stroke-width="2" stroke-dasharray="5 4"/><text x="${pl+4}" y="${ym+13}" font-size="10" font-weight="700" fill="#1F9D62">meta 8:00</text>`;
+  if(N>1) g += `<path d="${lst.map((x,i)=>(i?"L":"M")+X(i).toFixed(1)+" "+Y(x.rit).toFixed(1)).join(" ")}" fill="none" stroke="#1E4FA3" stroke-width="2.5" stroke-linejoin="round"/>`;
+  lst.forEach((x,i)=>{
+    const cx=X(i), cy=Y(x.rit), esp = x.t.tipo!=="int";
+    const estrela = (cx,cy,R,r)=>{let p="";for(let k=0;k<10;k++){const a=Math.PI/5*k-Math.PI/2,rr=k%2?r:R;p+=(k?"L":"M")+(cx+rr*Math.cos(a)).toFixed(1)+" "+(cy+rr*Math.sin(a)).toFixed(1)}return p+"Z"};
+    g += esp ? `<path d="${estrela(cx,cy,9,4)}" fill="#E58A17" stroke="#fff" stroke-width="1.5"/>` : `<circle cx="${cx}" cy="${cy}" r="4.5" fill="#fff" stroke="#1E4FA3" stroke-width="2.5"/>`;
+    g += `<text x="${Math.min(cx,W-16)}" y="${cy-12}" font-size="10.5" font-weight="700" fill="${esp?"#B5650B":"#1B2333"}" stroke="#fff" stroke-width="3.5" paint-order="stroke" text-anchor="middle">${esp?mmss(x.r.s):mmss(x.rit)}</text>`;
+    g += `<text x="${cx}" y="${H-12}" font-size="10" fill="#5B6678" text-anchor="middle">${x.t.tipo==="teste"?"5k":x.t.tipo==="desafio"?"🏁":"T"+x.t.id}</text>`;
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Ritmo de cada treino do desafio">${g}</svg>`;
+}
+
+// ----- registro de um treino -----
+const OBS5K = ["😊 Tranquilo","😮‍💨 Cansada","🦵 Dor na perna","🦶 Dor no pé","🫁 Sem fôlego","🔥 Me senti forte"];
+function telaReg5k(id){
+  const t = t5k(id), r = reg5k[id] || {}, hoje = iso(hojeD());
+  cab(nome5k(t), descr5k(t), true);
+  const dataPad = r.d || (hoje>=t.ini && hoje<=t.fim ? hoje : dia5k(t));
+  const pre = pre5k && pre5k.id==id ? pre5k : null;
+  const sAtual = r.s || (pre ? pre.s : 0);
+  document.getElementById("tela").innerHTML = `
+  ${t.tipo!=="desafio"?`<div class="card"><h2>📅 Dia do treino</h2>
+    <div class="l5"><div style="flex:1"><small style="color:var(--sub)">Pode ser entre ${dmes(t.ini)} e ${dmes(t.fim)}. O lembrete muda junto.</small></div>
+    <input type="date" value="${dia5k(t)}" min="${t.ini}" max="${t.fim}" onchange="trocarDia5k(${id},this.value)"></div>
+    ${barra5k(t)}${t.tipo==="int"?legenda5k+`<button class="btn" onclick="iniciarInt(${id})">▶ Iniciar cronômetro de intervalos</button>`:""}</div>`:
+    `<div class="card dia29"><h2>🏁 Estratégia do desafio</h2><div class="passos"><div class="passo"><b>km 1–3</b>Leve, sem se empolgar</div><div class="passo" style="background:#FDF1E2"><b>km 4–5</b>Acelere só agora</div></div></div>`}
+  <div class="card"><h2>${r.d?"✓ Treino feito":"Registrar treino"}</h2>
+    <div id="hcSug"></div>
+    <div class="run-form">
+      <label>Data<input type="date" id="rData" value="${dataPad}" max="${hoje}" onchange="sugHC5k(${id})"></label>
+      <label>Distância (km)<input type="text" id="cKm" inputmode="decimal" placeholder="ex: 3,2" value="${r.km?String(r.km).replace(".",","):t.tipo!=="int"?"5":""}" oninput="ritmo5k()"></label>
+      <label class="full">Tempo total
+        <div class="tempo"><input type="number" id="cMin" inputmode="numeric" placeholder="min" min="0" value="${sAtual?Math.floor(sAtual/60):""}" oninput="ritmo5k()"><b>:</b><input type="number" id="cSeg" inputmode="numeric" placeholder="seg" min="0" max="59" value="${sAtual?sAtual%60:""}" oninput="ritmo5k()"></div></label>
+    </div>
+    <div class="ritmo-vivo" id="ritmoVivo"></div>
+    <label class="obs5k"><span>Observações (dor, cansaço…)</span><textarea id="rObs" rows="3" placeholder="Como foi?">${esc(r.obs||"")}</textarea></label>
+    <div class="chips5k">${OBS5K.map(o=>`<button onclick="addObs5k('${o}')">${o}</button>`).join("")}</div>
+    <button class="btn verde" onclick="salvarReg5k(${id})">${r.d?"Salvar alterações":"✓ Marcar como feito"}</button>
+    ${r.d?`<button class="btn claro" onclick="apagarReg5k(${id})">Desmarcar este treino</button>`:""}
+  </div>`;
+  ritmo5k(); sugHC5k(id);
+}
+function ritmo5k(){
+  const km = lerKm(), s = lerTempo(), el = $("ritmoVivo"); if(!el) return;
+  if(!(km>0) || !s){ el.innerHTML = "Distância e tempo são opcionais. Com os dois, o ritmo médio aparece aqui."; return; }
+  const r = s/km, ok = r <= D5.meta/5;
+  el.innerHTML = `Ritmo médio: <b style="color:${ok?"var(--verde)":"#B5650B"}">${mmss(r)} por km</b>${km>=4.9?` · ${ok?"dentro":"acima"} da meta de 40 min`:""}`;
+}
+function sugHC5k(id){
+  const box = $("hcSug"); if(!box) return;
+  const d = $("rData").value;
+  const usados = new Set(Object.entries(reg5k).filter(([k])=>k!=id).map(([,r])=>r.hc).filter(Boolean));
+  const cs = corridas.map((c,i)=>({c,i})).filter(({c})=>c.hc && c.d===d && !usados.has(c.hc));
+  box.innerHTML = cs.length ? `<div class="sug5k"><small>⌚ Corrida do relógio neste dia:</small>${cs.map(({c,i})=>`<button onclick="usarHC5k(${i})">${kmf(c.km)} km em ${mmss(c.s)} · usar</button>`).join("")}</div>`
+    : (temHC() ? `<p class="legenda" style="margin:0 0 10px">Nenhuma corrida do Polar neste dia. Pode preencher à mão.</p>` : "");
+}
+function usarHC5k(i){
+  const c = corridas[i];
+  $("cKm").value = String(c.km).replace(".",","); $("cMin").value = Math.floor(c.s/60); $("cSeg").value = c.s%60;
+  $("hcSug").dataset.hc = c.hc; ritmo5k();
+}
+function addObs5k(o){ const el=$("rObs"); el.value = (el.value.trim()? el.value.trim()+", " : "") + o; }
+function salvarReg5k(id){
+  const d = $("rData").value; if(!d){ alert("Escolha a data."); return; }
+  const kmTxt = $("cKm").value.trim(), km = kmTxt ? lerKm() : 0, s = lerTempo();
+  if(kmTxt && !(km>0 && km<=60)){ alert("Digite a distância em km, por exemplo 3,2"); return; }
+  if(parseInt($("cSeg").value||"0",10)>59){ alert("Os segundos vão de 0 a 59."); return; }
+  const antigo = reg5k[id] || {};
+  const hc = $("hcSug").dataset.hc || (antigo.hc && antigo.km===Math.round(km*100)/100 ? antigo.hc : undefined);
+  reg5k[id] = {d, km: km?Math.round(km*100)/100:0, s, obs: $("rObs").value.trim(), hc};
+  gravar("reg5k", reg5k); pre5k = null; agendar5k();
+  const n = feitos5k(), t = t5k(id);
+  let msg = t.tipo==="desafio" ? (s && km>=4.9 && s<=D5.meta ? "🏆 5 KM EM MENOS DE 40 MINUTOS! DESAFIO CUMPRIDO!" : "🏁 Desafio registrado! Que orgulho 💪")
+          : t.tipo==="teste" ? `Teste de 5 km registrado${s?": "+mmss(s):""}! ${n} de 7 feitos 💪` : `${nome5k(t)} feito! ${n} de 7 💪`;
+  alert(msg); voltar();
+}
+function apagarReg5k(id){
+  if(!confirm("Desmarcar este treino? O registro dele será apagado.")) return;
+  delete reg5k[id]; gravar("reg5k", reg5k); agendar5k(); voltar();
+}
+function trocarDia5k(id, v){
+  const t = t5k(id); if(!v || v<t.ini || v>t.fim){ alert(`Escolha um dia entre ${dmes(t.ini)} e ${dmes(t.fim)}.`); telaReg5k(id); return; }
+  if(v===t.padrao) delete datas5k[id]; else datas5k[id] = v;
+  gravar("datas5k", datas5k); agendar5k();
+}
+
+// ----- cronômetro de intervalos -----
+let intLoop = null, intUltimo = -1;
+const temInt = () => !!(window.Android && Android.agendarIntervalos);
+function totInt(st){ return st.segs.reduce((a,s)=>a+s.dur,0); }
+function agendarInt(st){
+  if(!temInt()) return;
+  const L = []; let acc = 0; const N = st.segs.length, tot = totInt(st);
+  st.segs.forEach((s,k)=>{
+    acc += s.dur;
+    const quando = st.ini + acc*1000;
+    if(k < N-1){
+      const nx = st.segs[k+1], depois = st.segs[k+2];
+      L.push({quando, tipo:nx.tipo, titulo: nx.tipo==="trote" ? `🏃‍♀️ TROTE agora · ${durTxt(nx.dur)}` : `🚶‍♀️ CAMINHADA agora · ${durTxt(nx.dur)}`,
+        texto: `Bloco ${k+2} de ${N} · faltam ${mmss(tot-acc)}${depois?` · depois: ${depois.tipo==="trote"?"trote":"caminhada"}`:""}`});
+    } else L.push({quando, tipo:"fim", titulo:"🎉 Treino concluído!", texto:`${durTxt(tot)} feitos. Abra o app para registrar o treino.`});
+  });
+  try{ Android.agendarIntervalos(JSON.stringify(L)); Android.telaLigada(true); }catch(e){}
+}
+function iniciarInt(id){
+  const atualSt = ler("int5k", null);
+  if(atualSt && !atualSt.fim && !confirm("Já tem um cronômetro rodando. Começar outro do zero?")) { ir('int5k', atualSt.id, true); return; }
+  const t = t5k(id);
+  const st = {id, ini: Date.now(), pausa: null, segs: segmentos(t)};
+  gravar("int5k", st); agendarInt(st); intUltimo = 0;
+  ir('int5k', id, true);
+  if(!temInt()) avisoFase("trote");
+}
+function estadoInt(st){
+  const agora = st.pausa || Date.now(), el = Math.max(0, (agora - st.ini)/1000), tot = totInt(st);
+  let acc = 0;
+  for(let k=0;k<st.segs.length;k++){ if(el < acc + st.segs[k].dur) return {k, resta: acc + st.segs[k].dur - el, el, tot}; acc += st.segs[k].dur; }
+  return {k: st.segs.length, resta: 0, el: tot, tot, fim: true};
+}
+function telaInt5k(id){
+  const st = ler("int5k", null);
+  const t = t5k(st ? st.id : id);
+  cab("⏱ " + nome5k(t), descr5k(t), true);
+  if(!st){ document.getElementById("tela").innerHTML = `<div class="card"><p>Nenhum cronômetro rodando.</p><button class="btn" onclick="iniciarInt(${id})">▶ Iniciar</button></div>`; return; }
+  document.getElementById("tela").innerHTML = `
+  <div class="int5k" id="intBox">
+    <div class="fase" id="intFase">TROTE</div>
+    <div class="relogio" id="intTempo">0:00</div>
+    <div class="sub" id="intBloco"></div>
+    <div class="prox" id="intProx"></div>
+  </div>
+  <div class="card">
+    <div class="barra5k grande5k" id="intBarra">${st.segs.map(s=>`<i class="${s.tipo==="trote"?"tr":"cm"}" style="flex:${s.dur}"></i>`).join("")}<b id="intAgulha"></b></div>
+    <div class="legenda" style="display:flex;justify-content:space-between;margin-top:6px"><span id="intEl">0:00</span><span id="intTot">${mmss(totInt(st))}</span></div>
+  </div>
+  <div id="intBotoes"></div>
+  <p class="legenda" style="text-align:center;padding:0 10px">${temInt()?"O celular vibra e toca um som leve a cada troca, mesmo com a tela apagada ou no bolso. 3 vibrações = trote · 1 vibração longa = caminhada.":"Deixe esta tela aberta: ela vibra e apita a cada troca."}</p>`;
+  intUltimo = estadoInt(st).k;
+  clearInterval(intLoop); tickInt(); intLoop = setInterval(tickInt, 250);
+}
+function tickInt(){
+  if(atual !== "int5k"){ clearInterval(intLoop); return; }
+  const st = ler("int5k", null); if(!st){ clearInterval(intLoop); return; }
+  const e = estadoInt(st), box = $("intBox"); if(!box) return;
+  if(e.fim){
+    clearInterval(intLoop);
+    if(!st.fim){ st.fim = true; gravar("int5k", st); try{ Android.telaLigada(false) }catch(x){} if(!temInt()) avisoFase("fim"); }
+    box.className = "int5k fim"; $("intFase").textContent = "CONCLUÍDO! 🎉"; $("intTempo").textContent = mmss(e.tot);
+    $("intBloco").textContent = "Mandou bem! Agora registre o treino."; $("intProx").textContent = "";
+    $("intAgulha").style.left = "100%"; $("intEl").textContent = mmss(e.tot);
+    $("intBotoes").innerHTML = `<button class="btn verde" onclick="registrarDoInt()">✓ Registrar treino</button><button class="btn claro" onclick="fecharInt()">Fechar cronômetro</button>`;
+    return;
+  }
+  if(e.k !== intUltimo){ if(!temInt()) avisoFase(st.segs[e.k].tipo); intUltimo = e.k; }
+  const s = st.segs[e.k], nx = st.segs[e.k+1];
+  box.className = "int5k " + (s.tipo==="trote"?"tr":"cm") + (st.pausa?" pausado":"");
+  $("intFase").textContent = st.pausa ? "PAUSADO" : s.tipo==="trote" ? "🏃‍♀️ TROTE" : "🚶‍♀️ CAMINHADA";
+  $("intTempo").textContent = mmss(Math.ceil(e.resta));
+  $("intBloco").textContent = `Bloco ${e.k+1} de ${st.segs.length} · faltam ${mmss(Math.ceil(e.tot-e.el))}`;
+  $("intProx").textContent = nx ? `Depois: ${nx.tipo==="trote"?"trote":"caminhada"} ${durTxt(nx.dur)}` : "Último bloco!";
+  $("intAgulha").style.left = (e.el/e.tot*100)+"%"; $("intEl").textContent = mmss(e.el);
+  const bt = $("intBotoes"), modo = st.pausa ? "p" : "r";
+  if(bt.dataset.modo !== modo){ bt.dataset.modo = modo;
+    bt.innerHTML = `<div style="display:flex;gap:8px">${st.pausa?`<button class="btn" style="margin-top:0" onclick="pausarInt(false)">▶ Continuar</button>`:`<button class="btn" style="margin-top:0;background:var(--sub)" onclick="pausarInt(true)">⏸ Pausar</button>`}
+      <button class="btn claro" style="margin-top:0" onclick="pararInt()">■ Parar</button></div>`; }
+}
+function pausarInt(p){
+  const st = ler("int5k", null); if(!st) return;
+  if(p){ st.pausa = Date.now(); try{ Android.cancelarIntervalos(); Android.telaLigada(false) }catch(e){} }
+  else { st.ini += Date.now() - st.pausa; st.pausa = null; agendarInt(st); }
+  gravar("int5k", st); tickInt();
+}
+function pararInt(){
+  if(!confirm("Parar o cronômetro? O treino não será marcado.")) return;
+  const st = ler("int5k", null); const el = st ? estadoInt(st).el : 0;
+  try{ Android.cancelarIntervalos(); Android.telaLigada(false) }catch(e){}
+  apagar("int5k"); clearInterval(intLoop);
+  if(st && el > 300 && confirm(`Você fez ${mmss(el)}. Quer registrar o treino mesmo assim?`)){ pre5k = {id: st.id, s: Math.round(el)}; ir('desafio5k'); ir('reg5k', st.id, true); return; }
+  ir('desafio5k');
+}
+function registrarDoInt(){
+  const st = ler("int5k", null); if(!st) return;
+  pre5k = {id: st.id, s: totInt(st)}; apagar("int5k"); ir('desafio5k'); ir('reg5k', st.id, true);
+}
+function fecharInt(){ apagar("int5k"); ir('desafio5k'); }
+function avisoFase(tipo){
+  try{ navigator.vibrate && navigator.vibrate(tipo==="trote"?[500,150,500,150,500]:tipo==="fim"?[300,150,300,150,900]:[900]) }catch(e){}
+  bip();
+}
+window.abrirTela = function(t){
+  if(t !== "desafio5k") return;
+  const st = ler("int5k", null);
+  if(st) ir('int5k', st.id); else ir('desafio5k');
+};
+
+
+function cardSemana5k(){
+  const hoje = iso(hojeD()), f = diasPara29();
+  if(f < 0) return "";
+  const t = D5.treinos.find(x=>!reg5k[x.id] && dia5k(x)===hoje);
+  let txt;
+  if(f===0) txt = reg5k[ID_DESAFIO] ? "Desafio feito! 🏆" : "<b>Hoje é o desafio dos 5 km!</b> Leve nos 3 primeiros km, acelere nos 2 últimos.";
+  else if(t) txt = `<b>Hoje: ${nome5k(t)}</b> — ${descr5k(t)}`;
+  else if(D5.caminhada.includes(hoje)) txt = "<b>Hoje: só caminhada leve</b> 🚶‍♀️";
+  else txt = `<b>${feitos5k()} de 7</b> treinos feitos · faltam ${f} dia${f>1?"s":""} para 29/11`;
+  return `<div class="lembrete" style="background:#EAF1FD;color:var(--azul)" onclick="ir('desafio5k')">🏁 <b>Desafio 5 km:</b> ${txt} Toque para abrir.</div>`;
+}
 // ---------- TELA: PESO ----------
 let pesos = ler("pesos", []);   // [{d:"2026-11-11", kg:72.4}] em ordem de data
 const INTERVALO = 30;
@@ -853,8 +1278,9 @@ function telaHistorico(){
   </div>`;
 }
 
-ir("semana");
+if(location.hash==="#desafio5k") window.abrirTela("desafio5k"); else ir("semana");
 rodarTimer();
+agendar5k();
 setTimeout(()=>importarHC(true), 800);
 </script>
 </body>

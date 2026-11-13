@@ -23,6 +23,7 @@ public class MainActivity extends ComponentActivity {
         super.onCreate(savedInstanceState);
         getWindow().setStatusBarColor(Color.parseColor("#1E4FA3"));
         Descanso.criarCanal(this);
+        Lembretes.criarCanais(this);
         saude = new Saude(this, json -> { runOnUiThread(() -> { if (web != null) web.evaluateJavascript("window.recebeHC && window.recebeHC(" + json + ")", null); }); return kotlin.Unit.INSTANCE; });
         if (Build.VERSION.SDK_INT >= 33
                 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -46,7 +47,17 @@ public class MainActivity extends ComponentActivity {
             }
         });
         setContentView(web);
-        web.loadUrl("file:///android_asset/index.html");
+        String abrir = getIntent() != null ? getIntent().getStringExtra("abrir") : null;
+        web.loadUrl("file:///android_asset/index.html" + (abrir != null ? "#" + abrir : ""));
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        String abrir = intent.getStringExtra("abrir");
+        if (abrir != null && web != null)
+            web.evaluateJavascript("window.abrirTela && window.abrirTela('" + abrir.replaceAll("[^a-z0-9]", "") + "')", null);
     }
 
     @Override
@@ -72,6 +83,29 @@ public class MainActivity extends ComponentActivity {
         @JavascriptInterface
         public void importarCorridas(String desde, boolean silencioso) {
             runOnUiThread(() -> saude.importar(desde, silencioso));
+        }
+
+        @JavascriptInterface
+        public void agendarLembretes(String json) {
+            Lembretes.agendarLembretes(MainActivity.this, json);
+        }
+
+        @JavascriptInterface
+        public void agendarIntervalos(String json) {
+            Lembretes.agendarIntervalos(MainActivity.this, json);
+        }
+
+        @JavascriptInterface
+        public void cancelarIntervalos() {
+            Lembretes.cancelarIntervalos(MainActivity.this);
+        }
+
+        @JavascriptInterface
+        public void telaLigada(boolean ligada) {
+            runOnUiThread(() -> {
+                if (ligada) getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                else getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            });
         }
 
         @JavascriptInterface
