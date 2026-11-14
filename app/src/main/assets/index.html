@@ -224,12 +224,12 @@ const YT = q => "https://www.youtube.com/results?search_query=" + encodeURICompo
 const TXT_FAIXA = (a,b) => `Ajuste a carga para conseguir fazer pelo menos ${a} repetições, sem passar de ${b}. Se passar de ${b}, está leve: aumente. Se não chegar a ${a}, está pesado: diminua.`;
 const TXT_AQ = (a,b) => `Aquecimento: 1 série de 12 com 50% da carga. Descanse 1 min. Depois aumente bem a carga e faça 3 séries de ${a} a ${b} repetições.`;
 const TXT_PIR = "Pirâmide: a cada série, menos repetições e mais carga. 1ª: 12 reps · 2ª: 10 reps · 3ª: 8 reps · 4ª: 6 reps. Descanse 1 min entre elas.";
-const TXT_PRANCHA = "Prepara o corpo e fortalece o core. Se conseguir ficar mais que 40s, fique! Tente aumentar 5 segundos a cada semana.";
+const EX_CORE = {n:"Anti-rotação na polia (Pallof)", g:"Abdome", s:"2x 10-12 (cada lado)", d:60, t:"Em pé, de lado para a polia, com o cabo na altura do peito. Segure a alça com as duas mãos junto ao peito, estenda os braços para a frente, segure 2 segundos sem deixar o tronco girar e volte. Faça todas as repetições de um lado, depois vire e faça do outro.", dica:"Comece com a carga bem leve. Pés afastados na largura dos ombros e barriga firme o tempo todo."};
 const TXT_ABD = "Use o menor impulso possível com os braços, sem passar da linha da orelha. Faça força de verdade com o abdômen.";
 
 const TREINOS = {
   A:{nome:"Treino A", foco:"Glúteos, posterior e panturrilha", ex:[
-    {n:"Prancha abdominal", g:"Abdome", s:"2x 30-40s", d:60, t:TXT_PRANCHA},
+    EX_CORE,
     {n:"Cadeira Flexora", g:"Isquiotibiais", s:"1x 12 + 3x 08-10", d:60, t:TXT_AQ(8,10), dica:"Se a mesa flexora estiver ocupada, pode fazer na cadeira flexora."},
     {n:"Agachamento Sumô", g:"Glúteos", s:"4x 12/10/08/06", d:60, t:TXT_PIR, tec:"PIRÂMIDE"},
     {n:"Elevação pélvica máquina", g:"Glúteos", s:"3x 08-10", d:60, t:TXT_FAIXA(8,10), dica:"Se a academia não tiver a máquina, faça livre no banco com a barra."},
@@ -246,9 +246,9 @@ const TREINOS = {
     {n:"Remada Alta na Polia Alta", g:"Deltoide", s:"3x 10-12", d:60, t:TXT_FAIXA(10,12), dica:"Mantenha as escápulas coladas uma na outra o tempo todo!"}
   ]},
   C:{nome:"Treino C", foco:"Quadríceps, glúteos e panturrilha", ex:[
-    {n:"Prancha abdominal", g:"Abdome", s:"2x 30-40s", d:60, t:TXT_PRANCHA},
+    EX_CORE,
     {n:"Cadeira Extensora", g:"Quadríceps", s:"1x 12 + 3x 08-10", d:60, t:TXT_AQ(8,10)},
-    {n:"Afundo no Espaldar", g:"Reabilitação", s:"3x 10-12 (cada perna)", d:60, t:"Comece sem carga. Faça todas as repetições com a perna direita, descanse 1 min, depois a esquerda, descanse 1 min, e assim por diante. O descanso é entre uma perna e outra.", dica:"Tronco levemente inclinado para frente!"},
+    {n:"Sentar e levantar do banco", g:"Quadríceps", s:"3x 10-12", d:60, t:"Fique de frente para o espaldar, segurando nele, com um banco firme logo atrás de você. Desça devagar, empurrando o quadril para trás, até encostar no banco; depois suba empurrando o chão com os calcanhares. Se precisar, sente por completo, respire e levante. Comece sem carga.", dica:"Quanto mais alto o banco, mais fácil. Joelhos apontando para o mesmo lado dos pés."},
     {n:"Leg Press 45°", g:"Quadríceps", s:"4x 12/10/08/06", d:60, t:TXT_PIR, tec:"PIRÂMIDE"},
     {n:"Cadeira Flexora", g:"Isquiotibiais", s:"3x 08-10", d:60, t:TXT_FAIXA(8,10)},
     {n:"Cadeira Abdutora tronco inclinado", g:"Glúteos", s:"3x 08-10", d:60, t:TXT_FAIXA(8,10)},
@@ -265,17 +265,17 @@ const TREINOS = {
   ]}
 };
 const FOTOS = {
-  "Prancha abdominal":"Plank","Cadeira Flexora":"Seated_Leg_Curl","Agachamento Sumô":"Plie_Dumbbell_Squat",
+  "Anti-rotação na polia (Pallof)":"Pallof_Press","Cadeira Flexora":"Seated_Leg_Curl","Agachamento Sumô":"Plie_Dumbbell_Squat",
   "Elevação pélvica máquina":"Barbell_Hip_Thrust","Cadeira Abdutora tronco inclinado":"Thigh_Abductor",
   "Panturrilha Sentado":"Seated_Calf_Raise","Abdominal Supra no Solo":"Crunches","Puxada com Triângulo":"V-Bar_Pulldown",
   "Remada Alta na Polia com Triângulo":"Leverage_High_Row","Remada Baixa com Triângulo":"Seated_Cable_Rows",
   "Elevação Lateral Sentada":"Seated_Side_Lateral_Raise","Elevação Frontal na Polia com Corda":"Front_Cable_Raise",
-  "Remada Alta na Polia Alta":"Face_Pull","Cadeira Extensora":"Leg_Extensions","Afundo no Espaldar":"Split_Squats",
+  "Remada Alta na Polia Alta":"Face_Pull","Cadeira Extensora":"Leg_Extensions","Sentar e levantar do banco":"Sit_Squats",
   "Leg Press 45°":"Leg_Press","Panturrilha no Leg Press Horizontal":"Calf_Press_On_The_Leg_Press_Machine",
   "Elevação Lateral Inclinado":"One-Arm_Incline_Lateral_Raise","Desenvolvimento com Halter":"Dumbbell_Shoulder_Press",
   "Crucifixo inverso na máquina":"Reverse_Machine_Flyes"
 };
-const VERSAO = "1.7";
+const VERSAO = "1.8";
 const NOMES_DIA = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 const DIA_LONGO = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
 
