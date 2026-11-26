@@ -9,10 +9,22 @@ android {
         applicationId "br.com.meutreino"
         minSdk 26
         targetSdk 34
-        versionCode 9
-        versionName "1.9"
+        versionCode 10
+        versionName "2.0"
     }
-    buildTypes { release { minifyEnabled false } }
+    // Chave fixa: assim as atualizações instalam por cima sem apagar os dados.
+    signingConfigs {
+        fixa {
+            storeFile file('meutreino.keystore')
+            storePassword System.getenv('KS_SENHA') ?: ''
+            keyAlias 'meutreino'
+            keyPassword System.getenv('KS_SENHA') ?: ''
+        }
+    }
+    buildTypes {
+        debug { if (file('meutreino.keystore').exists()) signingConfig signingConfigs.fixa }
+        release { minifyEnabled false; if (file('meutreino.keystore').exists()) signingConfig signingConfigs.fixa }
+    }
     compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
     kotlinOptions { jvmTarget = '17' }
 }

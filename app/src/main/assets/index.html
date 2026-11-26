@@ -77,6 +77,19 @@ h2{font-size:17px;margin:4px 0 10px}
 .passo b{min-width:58px}
 .hist .linha{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--linha);font-size:14px}
 .hist .linha:last-child{border:0}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.cal .cab{font-size:11px;color:var(--sub);font-weight:700;padding:2px 0}
+.cal .c{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:14px;background:var(--fundo);color:var(--texto)}
+.cal .c.vazio{background:transparent}
+.cal .c.fora{opacity:.35}
+.cal .c.hoje{outline:2px solid var(--azul2)}
+.cal .c.feito{color:#fff;font-weight:800}
+.cal .c small{font-size:10px;line-height:1}
+.contas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin-top:12px}
+.contas div{background:var(--fundo);border-radius:12px;padding:8px 4px}
+.contas b{display:block;font-size:22px}
+.contas small{color:var(--sub);font-size:11px}
+textarea.bkp{width:100%;min-height:90px;border:1px solid var(--linha);border-radius:10px;padding:8px;font-size:12px;margin-top:8px}
 .fotos{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:0 12px 10px}
 .fotos div{position:relative;border-radius:10px;overflow:hidden;background:var(--fundo)}
 .fotos img{display:block;width:100%;height:120px;object-fit:cover}
@@ -275,7 +288,7 @@ const FOTOS = {
   "Elevação Lateral Inclinado":"One-Arm_Incline_Lateral_Raise","Desenvolvimento com Halter":"Dumbbell_Shoulder_Press",
   "Crucifixo inverso na máquina":"Reverse_Machine_Flyes"
 };
-const VERSAO = "1.9";
+const VERSAO = "2.0";
 const NOMES_DIA = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 const DIA_LONGO = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
 
@@ -283,6 +296,60 @@ const DIA_LONGO = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sába
 function ler(k,p){try{const v=localStorage.getItem(k);return v?JSON.parse(v):p}catch(e){return p}}
 function gravar(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 function apagar(k){try{localStorage.removeItem(k)}catch(e){}}
+
+// ---------- DADOS TRAZIDOS DA VERSÃO ANTERIOR ----------
+// Preenchido uma única vez para não perder o que já estava marcado. Só entra o que ainda não existir.
+const DADOS_INICIAIS = {v:1,
+  feitos:{"2026-11-23":"B","2026-11-24":"A","2026-11-25":"C","2026-11-26":"D"},
+  plano:{1:"B",2:"A",3:"C",4:"D",5:"A"},
+  pesos:[], cargas:{}, corridas:[]};
+(function(){
+  try{
+    if(+(localStorage.getItem("iniciaisV")||0) >= DADOS_INICIAIS.v) return;
+    if(!localStorage.getItem("plano")) gravar("plano", DADOS_INICIAIS.plano);
+    const f = ler("feitos",{}); Object.keys(DADOS_INICIAIS.feitos).forEach(k=>{ if(!f[k]) f[k]=DADOS_INICIAIS.feitos[k]; }); gravar("feitos",f);
+    const c = ler("cargas",{}); Object.keys(DADOS_INICIAIS.cargas).forEach(k=>{ if(!c[k]) c[k]=DADOS_INICIAIS.cargas[k]; }); gravar("cargas",c);
+    const p = ler("pesos",[]); DADOS_INICIAIS.pesos.forEach(x=>{ if(!p.some(y=>y.d===x.d)) p.push(x); }); p.sort((a,b)=>a.d<b.d?-1:1); gravar("pesos",p);
+    const r = ler("corridas",[]); DADOS_INICIAIS.corridas.forEach(x=>{ if(!r.some(y=>y.d===x.d&&y.s===x.s)) r.push(x); }); gravar("corridas",r);
+    localStorage.setItem("iniciaisV", String(DADOS_INICIAIS.v));
+  }catch(e){}
+})();
+
+// ---------- BACKUP ----------
+function dadosBackup(){
+  const o = {app:"MeuTreino", versao:VERSAO_BKP, em:new Date().toISOString(), dados:{}};
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i); if(k!=="timer"&&k!=="int5k") o.dados[k]=localStorage.getItem(k);}
+  return JSON.stringify(o);
+}
+const VERSAO_BKP = 1;
+function nomeBackup(){const d=new Date();return "MeuTreino-backup-"+d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")+"-"+String(d.getHours()).padStart(2,"0")+String(d.getMinutes()).padStart(2,"0")+".json"}
+function salvarBackup(silencioso){
+  if(!window.Android||!Android.salvarBackup){ if(!silencioso) mostrarTextoBackup(); return; }
+  const onde = Android.salvarBackup(nomeBackup(), dadosBackup());
+  if(onde){ gravar("ultBackup", iso(hojeD())); if(!silencioso){ alert("Backup salvo em:\n"+onde+"\n\nEsse arquivo continua no celular mesmo se o app for desinstalado."); telaHistorico(); } }
+  else if(!silencioso) alert("Não consegui salvar o arquivo. Use \"Enviar backup\" para mandar pelo WhatsApp ou e-mail.");
+}
+function enviarBackup(){ if(window.Android&&Android.compartilharBackup) Android.compartilharBackup(dadosBackup()); else mostrarTextoBackup(); }
+function mostrarTextoBackup(){ const t=$("bkpTxt"); if(t){t.value=dadosBackup(); t.style.display="block";} }
+function restaurarArquivo(){ if(window.Android&&Android.escolherBackup) Android.escolherBackup(); }
+function restaurarColado(){ const t=$("bkpCola").value.trim(); if(t) window.restaurarTexto(t); }
+window.restaurarTexto = function(txt){
+  let o; try{ o = JSON.parse(txt.slice(txt.indexOf("{"), txt.lastIndexOf("}")+1)); }catch(e){ alert("Esse não parece um backup do Meu Treino."); return; }
+  if(!o||o.app!=="MeuTreino"||!o.dados){ alert("Esse não parece um backup do Meu Treino."); return; }
+  const fA = ler("feitos",{}), fB = JSON.parse(o.dados.feitos||"{}");
+  const quando = o.em? new Date(o.em).toLocaleString("pt-BR") : "";
+  if(!confirm("Restaurar o backup de "+quando+"?\n\nTreinos no backup: "+Object.keys(fB).length+"\nTreinos no app agora: "+Object.keys(fA).length+"\n\nNada é apagado: os dois são juntados.")) return;
+  Object.keys(o.dados).forEach(k=>{
+    const novo = o.dados[k], velho = localStorage.getItem(k);
+    if(velho===null){ localStorage.setItem(k,novo); return; }
+    try{
+      const a = JSON.parse(velho), b = JSON.parse(novo);
+      if(Array.isArray(a)&&Array.isArray(b)){ const vis=new Set(a.map(x=>JSON.stringify(x))); b.forEach(x=>{if(!vis.has(JSON.stringify(x))) a.push(x)}); if(a.every(x=>x&&x.d)) a.sort((x,y)=>x.d<y.d?-1:1); localStorage.setItem(k,JSON.stringify(a)); }
+      else if(a&&b&&typeof a==="object"&&typeof b==="object"){ localStorage.setItem(k,JSON.stringify(Object.assign({},b,a))); }
+    }catch(e){}
+  });
+  alert("Backup restaurado! ✅"); location.reload();
+};
 let feitos = ler("feitos",{});   // "2026-11-09": "A"
 let cargas = ler("cargas",{});   // "A-2": "25 kg"
 let sessao = ler("sessao",{});   // {data, treino, ok:[idx], series:{idx:qtd}}
@@ -373,7 +440,7 @@ function telaSemana(){
   ${desloc===0&&pesagemPendente()?`<div class="lembrete" onclick="ir('peso')">⚖️ <b>Hora de se pesar!</b> ${pesos.length?"Já faz "+diasDesde(pesos[pesos.length-1].d)+" dias da última pesagem.":"Registre seu primeiro peso."} Toque aqui.</div>`:""}
   ${desloc===0?cardSemana5k():""}
   ${desloc===0&&hojeD()<=new Date(DESAFIO.ate+"T12:00:00")?`<div class="lembrete" style="background:var(--verdeClaro);color:#17603F" onclick="ir('corrida')">🏃‍♀️ <b>Desafio:</b> ${Math.min(DESAFIO.qtd,new Set(corridas.filter(c=>c.d>=DESAFIO.desde&&c.d<=DESAFIO.ate).map(c=>c.d)).size)} de ${DESAFIO.qtd} corridas até ${fmt(new Date(DESAFIO.ate+"T12:00:00"))}. Toque para registrar.</div>`:""}
-  ${desloc===0?`<button class="btn claro" style="margin-top:0" onclick="ir('treinos')">📅 Escolher o treino de cada dia da semana</button>`:""}`;
+  ${desloc===0?`<button class="btn claro" style="margin-top:0" onclick="ir('treinos')">📅 Escolher o treino de cada dia da semana</button><button class="btn claro" style="margin-top:0" onclick="ir('historico')">🗓️ Calendário de musculação</button>`:""}`;
 }
 function escolherTreinoHoje(l){
   const d = hojeD(), k = iso(d);
@@ -539,7 +606,7 @@ function verificarFim(l){
     setTimeout(()=>{ if(confirm("Todos os exercícios feitos! 🎉 Marcar o treino de hoje como concluído?")) concluir(l) },200);
   }
 }
-function concluir(l){feitos[iso(hojeD())]=l;gravar("feitos",feitos);alert("Treino "+l+" marcado! Mandou bem 💪");ir("semana")}
+function concluir(l){feitos[iso(hojeD())]=l;gravar("feitos",feitos);salvarBackup(true);alert("Treino "+l+" marcado! Mandou bem 💪");ir("semana")}
 
 // ---------- TIMER DE DESCANSO ----------
 // Guarda a hora de término, então continua certo mesmo se o app for para segundo plano.
@@ -1254,23 +1321,69 @@ function apagarPeso(i){
 }
 
 // ---------- TELA: HISTÓRICO ----------
+let mesDesloc = 0;
+function calendarioHtml(){
+  const hoje = hojeD();
+  const m0 = new Date(hoje.getFullYear(), hoje.getMonth()+mesDesloc, 1, 12);
+  const nomeMes = m0.toLocaleDateString("pt-BR",{month:"long", year:"numeric"});
+  const ini = inicioSemana(m0);               // começa na segunda
+  const fimMes = new Date(m0.getFullYear(), m0.getMonth()+1, 0, 12);
+  let cel = ["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(n=>`<div class="cab">${n}</div>`).join("");
+  let noMes = 0;
+  for(let d=new Date(ini); d<=fimMes || (d.getDay()!==1); d.setDate(d.getDate()+1)){
+    const k = iso(d), f = feitos[k], fora = d.getMonth()!==m0.getMonth();
+    if(f && !fora) noMes++;
+    const cls = ["c"]; if(fora) cls.push("fora"); if(f) cls.push("feito"); if(k===iso(hoje)) cls.push("hoje");
+    cel += `<div class="${cls.join(" ")}" style="${f?`background:${cor(f)}`:""}">${d.getDate()}${f?`<small>${f}</small>`:""}</div>`;
+  }
+  const s0 = inicioSemana(hoje); let semana = 0;
+  for(let i=0;i<7;i++){const d=new Date(s0);d.setDate(d.getDate()+i);if(feitos[iso(d)])semana++}
+  return `<div class="card">
+    <div class="semana-top">
+      <button onclick="mesDesloc--;telaHistorico()">‹</button>
+      <b style="text-transform:capitalize">${nomeMes}</b>
+      <button onclick="mesDesloc++;telaHistorico()">›</button>
+    </div>
+    <div class="cal">${cel}</div>
+    <div class="contas">
+      <div><b>${semana}</b><small>esta semana<br>(meta ${meta()})</small></div>
+      <div><b>${noMes}</b><small>${mesDesloc===0?"este mês":"no mês"}</small></div>
+      <div><b>${Object.keys(feitos).length}</b><small>no total</small></div>
+    </div>
+    <p class="legenda" style="margin-top:10px">Dias coloridos = musculação feita (a letra é o treino). Para marcar ou desmarcar, use a tela Semana.</p>
+  </div>`;
+}
 function telaHistorico(){
-  cab("Histórico","Seus treinos marcados");
+  cab("Histórico","Calendário de musculação");
   const ks = Object.keys(feitos).sort().reverse();
   const cont = {A:0,B:0,C:0,D:0}; ks.forEach(k=>cont[feitos[k]]++);
-  // sequência de semanas com 4+ treinos
+  // sequência de semanas com meta batida
   const porSemana = {};
   ks.forEach(k=>{const s=iso(inicioSemana(new Date(k+"T12:00:00")));porSemana[s]=(porSemana[s]||0)+1});
   let seq=0; const s0=inicioSemana(hojeD());
   for(let i=1;i<200;i++){const d=new Date(s0);d.setDate(d.getDate()-7*i);if((porSemana[iso(d)]||0)>=meta())seq++;else break}
   if((porSemana[iso(s0)]||0)>=meta()) seq++;
+  const ult = ler("ultBackup","");
   document.getElementById("tela").innerHTML = `
+  ${calendarioHtml()}
   <div class="card">
     <h2>Resumo</h2>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center">
       ${"ABCD".split("").map(l=>`<div><div class="letra" style="background:${cor(l)};margin:0 auto 4px;width:44px;height:44px;font-size:20px">${l}</div><b>${cont[l]}</b><br><small style="color:var(--sub)">vezes</small></div>`).join("")}
     </div>
-    <p class="legenda" style="margin-top:12px">Total: <b>${ks.length}</b> treinos · Semanas seguidas com meta batida: <b>${seq}</b> 🔥</p>
+    <p class="legenda" style="margin-top:12px">Semanas seguidas com meta batida: <b>${seq}</b> 🔥</p>
+  </div>
+  <div class="card">
+    <h2>💾 Backup</h2>
+    <p class="legenda" style="margin:-4px 0 0">Guarda treinos, cargas, corridas e peso. O app já salva sozinho quando você conclui um treino e uma vez por semana, na pasta Download/MeuTreino.${ult?" Último backup: "+fmt(new Date(ult+"T12:00:00"))+".":""}</p>
+    <button class="btn" onclick="salvarBackup()">Salvar backup agora</button>
+    <button class="btn claro" onclick="enviarBackup()">Enviar backup (WhatsApp, e-mail, Drive…)</button>
+    <button class="btn claro" onclick="restaurarArquivo()">Restaurar de um arquivo</button>
+    <textarea id="bkpTxt" class="bkp" style="display:none" readonly></textarea>
+    <details style="margin-top:10px"><summary class="legenda">Restaurar colando o texto do backup</summary>
+      <textarea id="bkpCola" class="bkp" placeholder="Cole aqui o texto do backup"></textarea>
+      <button class="btn claro" onclick="restaurarColado()">Restaurar</button>
+    </details>
   </div>
   <div class="card hist"><h2>Últimos treinos</h2>
     ${ks.length?ks.slice(0,40).map(k=>{const d=new Date(k+"T12:00:00");return `<div class="linha"><span>${NOMES_DIA[d.getDay()]}, ${d.toLocaleDateString("pt-BR")}</span><b style="color:${cor(feitos[k])}">Treino ${feitos[k]}</b></div>`}).join("")
@@ -1282,6 +1395,7 @@ if(location.hash==="#desafio5k") window.abrirTela("desafio5k"); else ir("semana"
 rodarTimer();
 agendar5k();
 setTimeout(()=>importarHC(true), 800);
+setTimeout(()=>{ const u=ler("ultBackup",""); if(Object.keys(feitos).length && (!u || diasDesde(u)>=7)) salvarBackup(true); }, 2000);
 </script>
 </body>
 </html>

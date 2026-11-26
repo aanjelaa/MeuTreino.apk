@@ -15,6 +15,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class MainActivity extends ComponentActivity {
+    private static final int PEGAR_BACKUP = 77;
     private WebView web;
     private Saude saude;
 
@@ -73,6 +74,41 @@ public class MainActivity extends ComponentActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int req, int res, Intent data) {
+        super.onActivityResult(req, res, data);
+        if (req != PEGAR_BACKUP || res != RESULT_OK || data == null || data.getData() == null) return;
+        try (java.io.InputStream in = getContentResolver().openInputStream(data.getData())) {
+            java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+            byte[] b = new byte[8192]; int n;
+            while ((n = in.read(b)) > 0) out.write(b, 0, n);
+            String txt = out.toString("UTF-8");
+            String js = org.json.JSONObject.quote(txt);
+            web.evaluateJavascript("window.restaurarTexto && window.restaurarTexto(" + js + ")", null);
+        } catch (Exception e) {
+            android.widget.Toast.makeText(this, "Não consegui ler o arquivo", android.widget.Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /** Salva o backup na pasta Download/MeuTreino (continua lá mesmo se desinstalar o app). */
+    private String salvarArquivo(String nome, String json) throws Exception {
+        byte[] bytes = json.getBytes("UTF-8");
+        if (Build.VERSION.SDK_INT >= 29) {
+            android.content.ContentValues v = new android.content.ContentValues();
+            v.put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, nome);
+            v.put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "application/json");
+            v.put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, "Download/MeuTreino");
+            Uri u = getContentResolver().insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, v);
+            try (java.io.OutputStream o = getContentResolver().openOutputStream(u)) { o.write(bytes); }
+            return "Download/MeuTreino/" + nome;
+        }
+        java.io.File dir = new java.io.File(getExternalFilesDir(null), "backup");
+        dir.mkdirs();
+        java.io.File f = new java.io.File(dir, nome);
+        try (java.io.FileOutputStream o = new java.io.FileOutputStream(f)) { o.write(bytes); }
+        return f.getAbsolutePath();
+    }
+
     /** Ponte usada pelo index.html para agendar o aviso de fim do descanso. */
     class Ponte {
         @JavascriptInterface
@@ -105,6 +141,32 @@ public class MainActivity extends ComponentActivity {
             runOnUiThread(() -> {
                 if (ligada) getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 else getWindow().clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            });
+        }
+
+        @JavascriptInterface
+        public String salvarBackup(String nome, String json) {
+            try { return salvarArquivo(nome, json); } catch (Exception e) { return ""; }
+        }
+
+        @JavascriptInterface
+        public void compartilharBackup(String json) {
+            runOnUiThread(() -> {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "Backup Meu Treino");
+                i.putExtra(Intent.EXTRA_TEXT, json);
+                startActivity(Intent.createChooser(i, "Enviar backup para…"));
+            });
+        }
+
+        @JavascriptInterface
+        public void escolherBackup() {
+            runOnUiThread(() -> {
+                Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("*/*");
+                startActivityForResult(i, PEGAR_BACKUP);
             });
         }
 

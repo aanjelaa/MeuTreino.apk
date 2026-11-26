@@ -13,7 +13,13 @@ jobs:
         with: { distribution: temurin, java-version: '17' }
       - uses: gradle/actions/setup-gradle@v4
         with: { gradle-version: '8.7' }
+      - name: Chave fixa (guardada nos Secrets do repositório)
+        env:
+          KS_B64: ${{ secrets.KS_B64 }}
+        run: if [ -n "$KS_B64" ]; then echo "$KS_B64" | base64 -d > app/meutreino.keystore; fi
       - run: gradle assembleDebug
+        env:
+          KS_SENHA: ${{ secrets.KS_SENHA }}
       - run: cp app/build/outputs/apk/debug/app-debug.apk MeuTreino-v$GITHUB_RUN_NUMBER.apk
       - uses: actions/upload-artifact@v4
         with:
